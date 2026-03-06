@@ -2,6 +2,8 @@ import { getPets } from "../pets/actions";
 import { getCalendarEvents } from "./actions";
 import CalendarClient from "./CalendarClient";
 
+import DashboardPageShell from "@/components/DashboardPageShell";
+
 export default async function CalendarPage() {
     // We'll pass server data to the client component to handle the interactive calendar
     // Default to current month
@@ -16,22 +18,16 @@ export default async function CalendarPage() {
     ]);
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-[var(--vy-neutral-900)]">Calendario</h1>
-                    <p className="text-sm text-[var(--vy-neutral-500)] mt-1">
-                        Visualiza y programa vacunas, desparasitaciones y citas veterinarias.
-                    </p>
-                </div>
-            </div>
-
+        <DashboardPageShell
+            title="Calendario"
+            subtitle="Visualiza y programa vacunas, desparasitaciones y citas veterinarias."
+        >
             <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
                 <CalendarClient
                     initialEvents={eventsRes.data || []}
                     pets={petsRes.data || []}
                 />
             </div>
-        </div>
+        </DashboardPageShell>
     );
 }

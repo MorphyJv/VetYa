@@ -183,7 +183,8 @@ export default function DashboardLayout({
                                 })}
                             </nav>
 
-                            <div className="border-t border-[var(--vy-neutral-200)] pt-4 mt-auto">
+                            <div className="border-t border-[var(--vy-neutral-200)] pt-4 mt-auto space-y-1">
+                                <ThemeSwitcher />
                                 <button
                                     onClick={handleSignOut}
                                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
@@ -229,16 +230,8 @@ export default function DashboardLayout({
             </nav>
 
             {/* ── Content ── */}
-            <main className="flex-1 lg:ml-64 pt-14 pb-20 lg:pt-0 lg:pb-0">
-                <motion.div
-                    key={pathname}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="p-6 max-w-7xl mx-auto"
-                >
-                    {children}
-                </motion.div>
+            <main className="flex-1 lg:ml-64 pt-14 pb-20 lg:pt-0 lg:pb-0 overflow-y-auto min-h-screen">
+                {children}
             </main>
 
             {/* ── Logout Confirmation Modal ── */}

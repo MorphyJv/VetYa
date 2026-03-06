@@ -5,6 +5,8 @@ import Link from "next/link";
 import DashboardClientWrapper from "./DashboardClientWrapper";
 import SocialQRCard from "./SocialQRCard";
 
+import DashboardPageShell from "@/components/DashboardPageShell";
+
 export default async function DashboardPage() {
     const [petsRes, eventsRes, placesRes] = await Promise.all([
         getPets(),
@@ -17,18 +19,10 @@ export default async function DashboardPage() {
     const suggestedPlaces = (placesRes.data || []).slice(0, 2);
 
     return (
-        <div className="space-y-8">
-            {/* Welcome Section */}
-            <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-[var(--vy-neutral-900)]">
-                    ¡Bienvenido a{" "}
-                    <span className="text-[var(--vy-primary-600)]">VetYa</span>! 👋
-                </h1>
-                <p className="mt-1 text-[var(--vy-neutral-500)]">
-                    Aquí tienes un resumen de tus mascotas y eventos.
-                </p>
-            </div>
-
+        <DashboardPageShell
+            title="¡Bienvenido a VetYa! 👋"
+            subtitle="Aquí tienes un resumen de tus mascotas y eventos."
+        >
             {/* Quick stats rendered via Client Wrapper to use Framer Motion */}
             <DashboardClientWrapper
                 petCount={pets.length}
@@ -167,6 +161,6 @@ export default async function DashboardPage() {
                     <SocialQRCard />
                 </div>
             </div>
-        </div>
+        </DashboardPageShell>
     );
 }

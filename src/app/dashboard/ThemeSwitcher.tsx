@@ -8,7 +8,7 @@ export default function ThemeSwitcher() {
     const { primaryColor, surfaceColor, setPrimaryColor, setSurfaceColor } = useTheme();
     const [isOpen, setIsOpen] = useState(false);
 
-    const primaryOptions = ["celeste", "blue", "violet", "emerald"];
+    const primaryOptions = ["celeste", "blue", "violet", "rose", "emerald", "amber", "orange"];
     const backgroundOptions = [
         { id: "white", color: "#ffffff", label: "Blanco" },
         { id: "gray", color: "#e2e8f0", label: "Gris" },
@@ -35,13 +35,13 @@ export default function ThemeSwitcher() {
                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        className="absolute bottom-full left-0 w-64 mb-2 bg-[var(--surface)] rounded-2xl border border-[var(--vy-neutral-200)] shadow-xl p-4 z-50 overflow-hidden"
+                        className="absolute bottom-full left-0 sm:left-auto sm:right-0 w-[calc(100vw-2rem)] sm:w-80 mb-2 bg-[var(--surface)] rounded-2xl border border-[var(--vy-neutral-200)] shadow-2xl p-4 z-50 max-h-[70vh] overflow-y-auto"
                     >
                         <div className="flex gap-4">
                             {/* Color 1 Column */}
                             <div className="flex-1 space-y-3">
                                 <p className="text-[10px] font-bold text-[var(--vy-neutral-400)] uppercase tracking-widest">Color 1</p>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-4 gap-2">
                                     {primaryOptions.map((opt) => (
                                         <button
                                             key={opt}

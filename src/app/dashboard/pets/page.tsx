@@ -53,11 +53,12 @@ function PetCard({ pet }: { pet: any }) {
     );
 }
 
+import DashboardPageShell from "@/components/DashboardPageShell";
+
 export default async function PetsDashboardPage() {
     const supabase = await createClient();
     const { data: { session } } = await supabase.auth.getSession();
 
-    // Note: For Vet profile, this logic would differ. Assuming Owner perspective for now as MVP.
     const { data: pets } = await supabase
         .from("pets")
         .select("*")
@@ -65,22 +66,18 @@ export default async function PetsDashboardPage() {
         .order("created_at", { ascending: false });
 
     return (
-        <div className="space-y-8">
-            <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-[var(--vy-neutral-900)]">Mis Mascotas</h1>
-                    <p className="text-sm text-[var(--vy-neutral-500)] mt-1">
-                        Gestiona el historial médico de tu familia de cuatro patas.
-                    </p>
-                </div>
+        <DashboardPageShell
+            title="Mis Mascotas"
+            subtitle="Gestiona el historial médico de tu familia de cuatro patas."
+            actions={
                 <Link
                     href="/dashboard/pets/add"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--vy-primary-600)] hover:bg-[var(--vy-primary-700)] text-white text-sm font-semibold rounded-xl shadow-md transition-colors whitespace-nowrap"
                 >
                     <span>➕</span> Agregar Mascota
                 </Link>
-            </div>
-
+            }
+        >
             {!pets || pets.length === 0 ? (
                 <div className="bg-white rounded-3xl border border-dashed border-[var(--vy-neutral-300)] p-12 text-center">
                     <div className="text-5xl mb-4">🏠</div>
@@ -96,6 +93,6 @@ export default async function PetsDashboardPage() {
                     ))}
                 </div>
             )}
-        </div>
+        </DashboardPageShell>
     );
 }

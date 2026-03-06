@@ -4,6 +4,8 @@ import { getActiveEmergencies } from "./actions";
 import SOSClient from "./SOSClient";
 import VetSOSClient from "./VetSOSClient";
 
+import DashboardPageShell from "@/components/DashboardPageShell";
+
 export default async function SOSPage() {
     const supabase = await createClient();
     const { data: { session } } = await supabase.auth.getSession();
@@ -19,9 +21,12 @@ export default async function SOSPage() {
     if (role === "vet") {
         const { data: emergencies } = await getActiveEmergencies();
         return (
-            <div className="h-full min-h-screen relative">
+            <DashboardPageShell
+                title="Panel SOS Veterinario"
+                subtitle="Monitorea y atiende emergencias activas en tiempo real."
+            >
                 <VetSOSClient initialEmergencies={emergencies || []} />
-            </div>
+            </DashboardPageShell>
         );
     }
 
@@ -35,8 +40,11 @@ export default async function SOSPage() {
     );
 
     return (
-        <div className="h-full min-h-screen relative">
+        <DashboardPageShell
+            title="Centro de Emergencias SOS"
+            subtitle="Solicita ayuda inmediata para tu mascota en momentos críticos."
+        >
             <SOSClient pets={pets || []} activeEmergencies={myActiveEmergencies} />
-        </div>
+        </DashboardPageShell>
     );
 }

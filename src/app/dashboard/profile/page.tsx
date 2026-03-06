@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useUser } from "@/hooks/useUser";
 import { createClient } from "@/lib/supabase/client";
 import { logout } from "@/app/auth/actions";
+import DashboardPageShell from "@/components/DashboardPageShell";
 
 export default function ProfilePage() {
     const { user, profile, loading } = useUser();
@@ -123,172 +124,172 @@ export default function ProfilePage() {
     const initials = profile?.display_name?.charAt(0)?.toUpperCase() || "👤";
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            <h1 className="text-2xl font-bold text-[var(--vy-neutral-900)]">Mi Perfil</h1>
+        <DashboardPageShell title="Mi Perfil">
+            <div className="max-w-2xl mx-auto">
+                <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
 
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
+                    {/* ── Avatar + name ── */}
+                    <div className="flex flex-col sm:flex-row gap-6 sm:items-center mb-8 pb-8 border-b border-[var(--vy-neutral-100)]">
 
-                {/* ── Avatar + name ── */}
-                <div className="flex flex-col sm:flex-row gap-6 sm:items-center mb-8 pb-8 border-b border-[var(--vy-neutral-100)]">
-
-                    {/* Hoverable avatar */}
-                    <div className="relative shrink-0">
-                        <button
-                            type="button"
-                            onClick={() => fileInputRef.current?.click()}
-                            onMouseEnter={() => setPhotoHover(true)}
-                            onMouseLeave={() => setPhotoHover(false)}
-                            className="w-24 h-24 rounded-full overflow-hidden relative focus:outline-none focus:ring-4 focus:ring-[var(--vy-primary-300)] transition-all"
-                            title="Cambiar foto de perfil"
-                            disabled={uploadingPhoto}
-                        >
-                            {/* Avatar image or initials */}
-                            {avatarUrl ? (
-                                // eslint-disable-next-line @next/next/no-img-element
-                                <img
-                                    src={avatarUrl}
-                                    alt="Foto de perfil"
-                                    className="w-full h-full object-cover"
-                                />
-                            ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-[var(--vy-primary-100)] to-[var(--vy-primary-300)] flex items-center justify-center text-3xl font-bold text-[var(--vy-primary-700)]">
-                                    {initials}
-                                </div>
-                            )}
-
-                            {/* Hover / loading overlay */}
-                            <AnimatePresence>
-                                {(photoHover || uploadingPhoto) && (
-                                    <motion.div
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1 rounded-full"
-                                    >
-                                        {uploadingPhoto ? (
-                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                        ) : (
-                                            <>
-                                                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                </svg>
-                                                <span className="text-white text-[10px] font-bold text-center leading-tight">
-                                                    {avatarUrl ? "Cambiar\nfoto" : "Añadir\nfoto"}
-                                                </span>
-                                            </>
-                                        )}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </button>
-
-                        {/* Hidden file input */}
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/png, image/jpeg, image/webp"
-                            className="hidden"
-                            onChange={handlePhotoChange}
-                        />
-                    </div>
-
-                    <div>
-                        <h2 className="text-xl font-bold text-[var(--vy-neutral-900)]">
-                            {profile?.display_name || "Usuario VetYa"}
-                        </h2>
-                        <p className="text-[var(--vy-neutral-500)] text-sm mt-0.5">{user?.email}</p>
-                        <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] text-xs font-semibold">
-                            {profile?.role === "vet" ? "⚕️ Veterinario" : "🐕 Dueño de mascota"}
-                        </div>
-                        <p className="text-[11px] text-[var(--vy-neutral-400)] mt-2">
-                            Pasa el cursor sobre la foto para cambiarla
-                        </p>
-                    </div>
-                </div>
-
-                {/* ── Error banner ── */}
-                {errorMsg && (
-                    <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
-                        ⚠️ {errorMsg}
-                    </div>
-                )}
-
-                {/* ── Edit form ── */}
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid sm:grid-cols-2 gap-5">
-                        <div>
-                            <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
-                                Nombre completo
-                            </label>
-                            <input
-                                type="text"
-                                value={formData.display_name}
-                                onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-                                required
-                                placeholder="Tu nombre"
-                                className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
-                                Teléfono
-                            </label>
-                            <input
-                                type="tel"
-                                value={formData.phone}
-                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                placeholder="+51 999 999 999"
-                                className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
-                            Correo electrónico
-                        </label>
-                        <input
-                            type="email"
-                            value={user?.email || ""}
-                            disabled
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-200)] text-sm bg-[var(--vy-neutral-50)] text-[var(--vy-neutral-400)] cursor-not-allowed"
-                        />
-                        <p className="text-[11px] text-[var(--vy-neutral-400)] mt-1">El correo no se puede modificar</p>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-4 border-t border-[var(--vy-neutral-100)]">
-                        <button
-                            type="button"
-                            onClick={() => logout()}
-                            className="px-5 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-xl transition-colors"
-                        >
-                            Cerrar Sesión
-                        </button>
-                        <div className="flex items-center gap-3">
-                            <AnimatePresence>
-                                {success && (
-                                    <motion.span
-                                        initial={{ opacity: 0, x: 10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0 }}
-                                        className="text-sm text-green-600 font-medium"
-                                    >
-                                        ✓ Cambios guardados
-                                    </motion.span>
-                                )}
-                            </AnimatePresence>
+                        {/* Hoverable avatar */}
+                        <div className="relative shrink-0">
                             <button
-                                type="submit"
-                                disabled={saving || !user}
-                                className="px-6 py-2.5 text-sm font-semibold bg-[var(--vy-primary-600)] text-white hover:bg-[var(--vy-primary-700)] rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                onMouseEnter={() => setPhotoHover(true)}
+                                onMouseLeave={() => setPhotoHover(false)}
+                                className="w-24 h-24 rounded-full overflow-hidden relative focus:outline-none focus:ring-4 focus:ring-[var(--vy-primary-300)] transition-all"
+                                title="Cambiar foto de perfil"
+                                disabled={uploadingPhoto}
                             >
-                                {saving ? "Guardando..." : "Guardar Cambios"}
+                                {/* Avatar image or initials */}
+                                {avatarUrl ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img
+                                        src={avatarUrl}
+                                        alt="Foto de perfil"
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gradient-to-br from-[var(--vy-primary-100)] to-[var(--vy-primary-300)] flex items-center justify-center text-3xl font-bold text-[var(--vy-primary-700)]">
+                                        {initials}
+                                    </div>
+                                )}
+
+                                {/* Hover / loading overlay */}
+                                <AnimatePresence>
+                                    {(photoHover || uploadingPhoto) && (
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1 rounded-full"
+                                        >
+                                            {uploadingPhoto ? (
+                                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            ) : (
+                                                <>
+                                                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    <span className="text-white text-[10px] font-bold text-center leading-tight">
+                                                        {avatarUrl ? "Cambiar\nfoto" : "Añadir\nfoto"}
+                                                    </span>
+                                                </>
+                                            )}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </button>
+
+                            {/* Hidden file input */}
+                            <input
+                                ref={fileInputRef}
+                                type="file"
+                                accept="image/png, image/jpeg, image/webp"
+                                className="hidden"
+                                onChange={handlePhotoChange}
+                            />
+                        </div>
+
+                        <div>
+                            <h2 className="text-xl font-bold text-[var(--vy-neutral-900)]">
+                                {profile?.display_name || "Usuario VetYa"}
+                            </h2>
+                            <p className="text-[var(--vy-neutral-500)] text-sm mt-0.5">{user?.email}</p>
+                            <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] text-xs font-semibold">
+                                {profile?.role === "vet" ? "⚕️ Veterinario" : "🐕 Dueño de mascota"}
+                            </div>
+                            <p className="text-[11px] text-[var(--vy-neutral-400)] mt-2">
+                                Pasa el cursor sobre la foto para cambiarla
+                            </p>
                         </div>
                     </div>
-                </form>
+
+                    {/* ── Error banner ── */}
+                    {errorMsg && (
+                        <div className="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
+                            ⚠️ {errorMsg}
+                        </div>
+                    )}
+
+                    {/* ── Edit form ── */}
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        <div className="grid sm:grid-cols-2 gap-5">
+                            <div>
+                                <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
+                                    Nombre completo
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.display_name}
+                                    onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
+                                    required
+                                    placeholder="Tu nombre"
+                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
+                                    Teléfono
+                                </label>
+                                <input
+                                    type="tel"
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                    placeholder="+51 999 999 999"
+                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
+                                Correo electrónico
+                            </label>
+                            <input
+                                type="email"
+                                value={user?.email || ""}
+                                disabled
+                                className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-200)] text-sm bg-[var(--vy-neutral-50)] text-[var(--vy-neutral-400)] cursor-not-allowed"
+                            />
+                            <p className="text-[11px] text-[var(--vy-neutral-400)] mt-1">El correo no se puede modificar</p>
+                        </div>
+
+                        <div className="flex items-center justify-between pt-4 border-t border-[var(--vy-neutral-100)]">
+                            <button
+                                type="button"
+                                onClick={() => logout()}
+                                className="px-5 py-2.5 text-sm font-semibold text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                            >
+                                Cerrar Sesión
+                            </button>
+                            <div className="flex items-center gap-3">
+                                <AnimatePresence>
+                                    {success && (
+                                        <motion.span
+                                            initial={{ opacity: 0, x: 10 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0 }}
+                                            className="text-sm text-green-600 font-medium"
+                                        >
+                                            ✓ Cambios guardados
+                                        </motion.span>
+                                    )}
+                                </AnimatePresence>
+                                <button
+                                    type="submit"
+                                    disabled={saving || !user}
+                                    className="px-6 py-2.5 text-sm font-semibold bg-[var(--vy-primary-600)] text-white hover:bg-[var(--vy-primary-700)] rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                                >
+                                    {saving ? "Guardando..." : "Guardar Cambios"}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        </DashboardPageShell>
     );
 }
