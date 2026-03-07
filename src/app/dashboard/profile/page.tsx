@@ -126,7 +126,7 @@ export default function ProfilePage() {
     return (
         <DashboardPageShell title="Mi Perfil">
             <div className="max-w-2xl mx-auto">
-                <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
+                <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
 
                     {/* ── Avatar + name ── */}
                     <div className="flex flex-col sm:flex-row gap-6 sm:items-center mb-8 pb-8 border-b border-[var(--vy-neutral-100)]">
@@ -227,7 +227,7 @@ export default function ProfilePage() {
                                     onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
                                     required
                                     placeholder="Tu nombre"
-                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-[var(--surface)] text-[var(--foreground)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
                                 />
                             </div>
                             <div>
@@ -239,7 +239,7 @@ export default function ProfilePage() {
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     placeholder="+51 999 999 999"
-                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-[var(--surface)] text-[var(--foreground)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
                                 />
                             </div>
                         </div>

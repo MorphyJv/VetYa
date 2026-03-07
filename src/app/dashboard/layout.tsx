@@ -47,7 +47,7 @@ export default function DashboardLayout({
     return (
         <div className="min-h-screen bg-[var(--background)] flex">
             {/* ── Desktop Sidebar ── */}
-            <aside className="hidden lg:flex flex-col w-64 bg-[var(--surface)] border-r border-[var(--border)] p-4 fixed inset-y-0 left-0 z-30">
+            <aside className="hidden lg:flex flex-col w-64 bg-[var(--surface)] border-r border-[var(--border)] p-4 fixed inset-y-0 left-0 z-30 overflow-visible">
                 {/* Logo */}
                 <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 mb-6 group">
                     <div className="bg-white rounded-[28%] p-2 shadow-sm overflow-hidden flex items-center justify-center h-16 w-16 transition-transform group-hover:scale-105 active:scale-95">
@@ -152,7 +152,7 @@ export default function DashboardLayout({
                             animate={{ x: 0 }}
                             exit={{ x: -280 }}
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                            className="lg:hidden fixed inset-y-0 left-0 w-72 bg-[var(--surface)] z-50 p-4 shadow-xl"
+                            className="lg:hidden fixed inset-y-0 left-0 w-72 bg-[var(--surface)] z-50 p-4 shadow-xl overflow-visible"
                         >
                             <div className="flex items-center gap-2 px-3 py-2 mb-6">
                                 <div className="bg-white rounded-[28%] p-2 shadow-md overflow-hidden flex items-center justify-center h-16 w-16">

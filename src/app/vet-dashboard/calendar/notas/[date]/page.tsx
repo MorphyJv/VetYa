@@ -20,9 +20,9 @@ export default async function DiaryNotePage({ params }: { params: Promise<{ date
     });
 
     return (
-        <div className="min-h-screen bg-[var(--vy-neutral-50)]">
+        <div className="min-h-screen bg-[var(--background)]">
             {/* Top bar */}
-            <div className="bg-white border-b border-[var(--vy-neutral-200)] px-6 py-4 flex items-center gap-4 sticky top-0 z-10">
+            <div className="bg-[var(--surface)] border-b border-[var(--border)] px-6 py-4 flex items-center gap-4 sticky top-0 z-10">
                 <Link
                     href="/vet-dashboard/calendar"
                     className="w-9 h-9 flex items-center justify-center rounded-xl bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-200)] transition-colors"
@@ -35,7 +35,7 @@ export default async function DiaryNotePage({ params }: { params: Promise<{ date
                     <h1 className="text-sm font-bold text-[var(--vy-neutral-900)] capitalize">{formattedDate}</h1>
                     <p className="text-xs text-[var(--vy-neutral-500)]">Notas personales — Solo visible para ti</p>
                 </div>
-                <span className="px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-full border border-teal-200">
+                <span className="px-3 py-1 bg-[var(--vy-primary-500)]/10 text-[var(--vy-primary-600)] text-xs font-bold rounded-full border border-[var(--vy-primary-500)]/20">
                     📓 Diario Clínico
                 </span>
             </div>

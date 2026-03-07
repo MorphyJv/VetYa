@@ -51,12 +51,12 @@ export default async function PetDetailPage(props: { params: Promise<{ id: strin
             </div>
 
             {/* Pet Header Card */}
-            <div className="bg-white rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center md:items-start border border-[var(--vy-neutral-200)] shadow-sm relative overflow-hidden">
+            <div className="bg-[var(--surface)] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center md:items-start border border-[var(--vy-neutral-200)] shadow-sm relative overflow-hidden">
                 <div className="absolute -top-12 -right-12 text-9xl opacity-5 pointer-events-none">
                     {getAvatarFallback(pet.name, pet.species)}
                 </div>
 
-                <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[var(--vy-primary-100)] to-[var(--vy-primary-300)] flex items-center justify-center text-6xl shrink-0 shadow-inner overflow-hidden border-4 border-white">
+                <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[var(--vy-primary-100)] to-[var(--vy-primary-300)] flex items-center justify-center text-6xl shrink-0 shadow-inner overflow-hidden border-4 border-[var(--surface)]">
                     {pet.photo_url ? (
                         <img src={pet.photo_url} alt={pet.name} className="w-full h-full object-cover" />
                     ) : (

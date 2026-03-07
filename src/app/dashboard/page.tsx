@@ -43,7 +43,7 @@ export default async function DashboardPage() {
                         </div>
 
                         {pets.length === 0 ? (
-                            <div className="bg-white rounded-3xl border border-dashed border-[var(--vy-neutral-300)] p-12 text-center">
+                            <div className="bg-[var(--surface)] rounded-3xl border border-dashed border-[var(--vy-neutral-300)] p-12 text-center">
                                 <div className="text-5xl mb-4">🐶</div>
                                 <h3 className="text-lg font-semibold text-[var(--vy-neutral-800)]">
                                     Comienza registrando a tu mascota
@@ -58,7 +58,7 @@ export default async function DashboardPage() {
                         ) : (
                             <div className="grid sm:grid-cols-2 gap-4">
                                 {pets.slice(0, 4).map(pet => (
-                                    <Link key={pet.id} href={`/dashboard/pets/${pet.id}`} className="bg-white rounded-3xl p-4 border border-[var(--vy-neutral-200)] hover:border-[var(--vy-primary-300)] hover:shadow-md transition-all flex items-center gap-4">
+                                    <Link key={pet.id} href={`/dashboard/pets/${pet.id}`} className="bg-[var(--surface)] rounded-3xl p-4 border border-[var(--vy-neutral-200)] hover:border-[var(--vy-primary-300)] hover:shadow-md transition-all flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full bg-[var(--vy-primary-100)] flex items-center justify-center text-xl shrink-0 overflow-hidden">
                                             {pet.photo_url ? (
                                                 <img src={pet.photo_url} alt={pet.name} className="w-full h-full object-cover" />
@@ -86,12 +86,12 @@ export default async function DashboardPage() {
                         </div>
                         <div className="grid sm:grid-cols-2 gap-4">
                             {suggestedPlaces.length === 0 ? (
-                                <div className="sm:col-span-2 p-6 bg-white rounded-3xl border border-[var(--vy-neutral-100)] text-center text-sm text-[var(--vy-neutral-500)]">
+                                <div className="sm:col-span-2 p-6 bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-100)] text-center text-sm text-[var(--vy-neutral-500)]">
                                     No hay lugares recomendados todavía.
                                 </div>
                             ) : (
                                 suggestedPlaces.map(place => (
-                                    <Link key={place.id} href="/dashboard/explore" className="bg-white rounded-3xl p-4 border border-[var(--vy-neutral-200)] hover:border-[var(--vy-primary-200)] flex items-center gap-4 group">
+                                    <Link key={place.id} href="/dashboard/explore" className="bg-[var(--surface)] rounded-3xl p-4 border border-[var(--vy-neutral-200)] hover:border-[var(--vy-primary-200)] flex items-center gap-4 group">
                                         <div className="w-16 h-12 rounded-2xl bg-[var(--vy-neutral-100)] flex items-center justify-center text-2xl overflow-hidden">
                                             {place.image_url ? (
                                                 <img src={place.image_url} alt={place.name} className="w-full h-full object-cover" />
@@ -117,7 +117,7 @@ export default async function DashboardPage() {
                         </Link>
                     </div>
 
-                    <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] p-5 shadow-sm space-y-3">
+                    <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] p-5 shadow-sm space-y-3">
                         {upcomingEvents.length === 0 ? (
                             <div className="text-center py-6">
                                 <div className="w-12 h-12 rounded-full bg-[var(--vy-neutral-100)] flex items-center justify-center text-xl mx-auto mb-3">📅</div>

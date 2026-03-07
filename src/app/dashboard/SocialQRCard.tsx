@@ -66,7 +66,7 @@ export default function SocialQRCard() {
     const tab = activeIdx !== null ? TABS[activeIdx] : null;
 
     return (
-        <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
+        <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
             {/* Header */}
             <div className="px-5 pt-5 pb-3 border-b border-[var(--vy-neutral-100)]">
                 <h3 className="text-sm font-bold text-[var(--vy-neutral-900)]">📲 Contacto Social</h3>

@@ -17,14 +17,14 @@ function QuickCallPanel({ onBack }: { onBack?: () => void }) {
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-lg bg-white border border-[var(--vy-neutral-100)] rounded-[40px] p-8 shadow-2xl flex flex-col"
+            className="w-full max-w-lg bg-[var(--surface)] border-2 border-[var(--vy-neutral-900)] rounded-[40px] p-8 shadow-2xl flex flex-col"
         >
             <div className="flex items-center gap-4 mb-8">
                 {onBack && (
-                    <button onClick={onBack} className="w-10 h-10 rounded-full bg-[var(--vy-neutral-50)] flex items-center justify-center text-xl hover:bg-[var(--vy-neutral-100)] transition-all">←</button>
+                    <button onClick={onBack} className="w-10 h-10 rounded-2xl bg-[var(--vy-neutral-50)] border border-[var(--vy-neutral-100)] flex items-center justify-center text-xl hover:bg-[var(--vy-neutral-100)] transition-all">←</button>
                 )}
-                <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl shadow-inner ml-auto lg:ml-0">📞</div>
-                <h2 className="text-2xl font-black text-[var(--vy-neutral-900)] tracking-tight">Atención Rápida</h2>
+                <div className="w-10 h-10 rounded-full bg-red-500 text-white flex items-center justify-center text-lg shadow-sm ml-auto lg:ml-0">📞</div>
+                <h2 className="text-xl font-black text-[var(--vy-neutral-900)] tracking-tight">Atención Rápida</h2>
             </div>
 
             <a
@@ -45,16 +45,16 @@ function QuickCallPanel({ onBack }: { onBack?: () => void }) {
 
                 <div className="flex overflow-x-auto md:flex-col gap-4 pb-4 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
                     {QUICK_VETS.map((vet) => (
-                        <div key={vet.number} className="snap-center shrink-0 w-[85vw] md:w-auto flex items-center gap-4 p-5 bg-[var(--vy-neutral-50)] rounded-[28px] border border-[var(--vy-neutral-100)] hover:border-red-200 transition-all hover:shadow-md group">
-                            <span className="text-2xl w-14 h-14 flex items-center justify-center bg-white border border-[var(--vy-neutral-100)] rounded-2xl group-hover:scale-105 transition-transform">{vet.icon}</span>
+                        <div key={vet.number} className="snap-center shrink-0 w-[85vw] md:w-auto flex items-center gap-4 p-5 bg-[var(--vy-neutral-900)] rounded-[28px] border border-white/5 shadow-xl transition-all hover:scale-[1.02] group">
+                            <span className="text-2xl w-14 h-14 flex items-center justify-center bg-white rounded-2xl shrink-0">{vet.icon}</span>
                             <div className="flex-1 min-w-0">
-                                <p className="text-[10px] font-bold text-[var(--vy-neutral-500)] uppercase tracking-widest truncate">{vet.name}</p>
-                                <p className="text-lg font-black text-[var(--vy-neutral-800)] truncate tracking-tight">{vet.number}</p>
+                                <p className="text-[10px] font-bold text-[var(--vy-neutral-400)] uppercase tracking-widest truncate">{vet.name}</p>
+                                <p className="text-lg font-black text-white truncate tracking-tight">{vet.number}</p>
                             </div>
                             <div className="flex items-center gap-2">
                                 <a
                                     href={`tel:${vet.number.replace(/\s/g, "")}`}
-                                    className="w-12 h-12 rounded-2xl bg-white text-red-600 flex items-center justify-center border border-[var(--vy-neutral-100)] hover:bg-red-50 hover:border-red-200 transition-all active:scale-90"
+                                    className="w-12 h-12 rounded-2xl bg-white text-[var(--vy-neutral-900)] flex items-center justify-center hover:bg-red-50 transition-all active:scale-90"
                                 >
                                     📞
                                 </a>
@@ -62,7 +62,7 @@ function QuickCallPanel({ onBack }: { onBack?: () => void }) {
                                     href={`https://wa.me/${vet.number.replace(/\+/g, "").replace(/\s/g, "")}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-12 h-12 rounded-2xl bg-white text-green-600 flex items-center justify-center border border-[var(--vy-neutral-100)] hover:bg-green-50 hover:border-green-200 transition-all active:scale-90"
+                                    className="w-12 h-12 rounded-2xl bg-white text-[var(--vy-neutral-900)] flex items-center justify-center hover:bg-green-50 transition-all active:scale-90"
                                 >
                                     💬
                                 </a>
@@ -118,37 +118,36 @@ export default function SOSClient({
         }
     };
 
-    /* ── Active emergency view ── */
     if (activeEmergencies.length > 0) {
         const active = activeEmergencies[0];
         return (
-            <div className="flex flex-col items-center pt-8 pb-20 px-6 min-h-screen bg-[var(--vy-neutral-50)]">
+            <div className="flex flex-col items-center pt-8 pb-20 px-4 min-h-screen bg-[var(--surface)]">
                 <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    className="w-full max-w-lg z-10 flex flex-col items-center text-center p-10 bg-white rounded-[40px] border border-[var(--vy-neutral-100)] shadow-2xl relative overflow-hidden"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="w-full max-w-2xl bg-[var(--surface)] rounded-[40px] border-2 border-[var(--vy-neutral-900)] shadow-2xl relative overflow-hidden flex flex-col items-center p-12 text-center"
                 >
-                    <div className="absolute top-0 left-0 w-full h-2 bg-red-500" />
-                    <h2 className="text-2xl font-black text-[var(--vy-neutral-800)] mb-2 tracking-tight uppercase">Emergencia en Curso</h2>
-                    <p className="text-sm text-[var(--vy-neutral-500)] mb-10 font-bold">
-                        Tu mascota <span className="text-red-500 font-black">{active.pet.name}</span> está siendo atendida.
+                    <div className="absolute top-0 left-0 w-full h-3 bg-red-500" />
+                    <h2 className="text-3xl font-black text-[var(--vy-neutral-900)] mb-4 tracking-tight uppercase">Emergencia en Curso</h2>
+                    <p className="text-base text-[var(--vy-neutral-500)] mb-12 font-bold">
+                        Tu mascota <span className="text-red-500 font-black tracking-widest">{active.pet.name.toUpperCase()}</span> está siendo atendida.
                     </p>
 
                     <Link href={`/dashboard/sos/${active.id}`} className="group relative flex flex-col items-center justify-center outline-none">
-                        <div className="relative flex items-center justify-center mb-8">
-                            <motion.div className="absolute rounded-full bg-red-500/20" animate={{ scale: [1, 1.4, 2], opacity: [0.6, 0.2, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }} style={{ width: "160px", height: "160px" }} />
-                            <motion.div className="relative z-10 w-40 h-40 rounded-full bg-red-500 shadow-xl flex items-center justify-center border-[6px] border-white group-hover:bg-red-600 transition-transform active:scale-95">
-                                <svg viewBox="0 0 24 24" className="w-20 h-20 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                        <div className="relative flex items-center justify-center mb-10">
+                            <motion.div className="absolute rounded-full bg-red-500/10" animate={{ scale: [1, 1.5], opacity: [0.5, 0] }} transition={{ repeat: Infinity, duration: 2 }} style={{ width: "200px", height: "200px" }} />
+                            <motion.div className="relative z-10 w-48 h-48 rounded-full bg-red-500 shadow-2xl flex items-center justify-center border-[8px] border-white group-hover:bg-red-600 transition-all active:scale-95">
+                                <svg viewBox="0 0 24 24" className="w-24 h-24 text-white" fill="none" stroke="currentColor" strokeWidth="2.5">
                                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                                 </svg>
                             </motion.div>
                         </div>
-                        <h3 className="text-5xl font-black text-[var(--vy-neutral-800)] uppercase leading-none">SOS</h3>
-                        <p className="text-xs font-black uppercase tracking-[0.3em] text-red-500 mt-4 animate-pulse">Entrar al Chat</p>
+                        <h3 className="text-6xl font-black text-[var(--vy-neutral-900)] uppercase leading-none italic tracking-tighter">SOS</h3>
+                        <p className="text-xs font-black uppercase tracking-[0.6em] text-red-500 mt-6 animate-pulse">Entrar al Chat</p>
                     </Link>
                 </motion.div>
 
-                <div className="mt-12 w-full flex justify-center">
+                <div className="mt-12 w-full flex justify-center max-w-2xl">
                     <QuickCallPanel />
                 </div>
             </div>
@@ -203,33 +202,42 @@ export default function SOSClient({
                         key="choice"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="max-w-4xl mx-auto flex flex-col items-center py-10"
+                        className="max-w-xl mx-auto flex flex-col items-center py-6 space-y-10"
                     >
-                        <div className="flex items-center gap-4 mb-12 w-full max-w-lg">
-                            <button onClick={handleBack} className="w-14 h-14 rounded-2xl bg-white border border-[var(--vy-neutral-100)] flex items-center justify-center shadow-sm hover:bg-[var(--vy-neutral-50)] transition-all">←</button>
-                            <h2 className="text-3xl font-black text-[var(--vy-neutral-900)] tracking-tight">¿Cómo podemos ayudarte?</h2>
+                        {/* Header with back */}
+                        <div className="flex items-center gap-4 w-full">
+                            <button onClick={handleBack} className="w-12 h-12 rounded-2xl bg-[var(--surface)] border-2 border-[var(--vy-neutral-900)] flex items-center justify-center shadow-sm hover:bg-[var(--vy-neutral-50)] transition-all">←</button>
+                            <h2 className="text-xl font-black text-[var(--vy-neutral-900)] tracking-tight">Opciones SOS</h2>
                         </div>
 
-                        <div className="flex overflow-x-auto md:grid md:grid-cols-2 gap-6 w-full pb-8 px-4 -mx-4 scrollbar-hide snap-x snap-mandatory items-stretch">
-                            <button
-                                onClick={() => setStep(1)}
-                                className="snap-center shrink-0 w-[85vw] md:w-auto bg-white p-10 rounded-[45px] border-2 border-transparent hover:border-red-500 shadow-xl transition-all hover:scale-[1.03] group flex flex-col items-center text-center"
-                            >
-                                <div className="w-24 h-24 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-5xl mb-6 shadow-inner group-hover:bg-red-500 group-hover:text-white transition-all">🚑</div>
-                                <h3 className="text-2xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight mb-2">Emergencia SOS</h3>
-                                <p className="text-sm font-bold text-[var(--vy-neutral-500)] max-w-[200px]">Notifica automáticamente a los veterinarios de la red.</p>
-                                <div className="mt-auto pt-8 px-6 py-3 bg-red-100 text-red-600 rounded-full text-xs font-black uppercase tracking-widest">Proceder</div>
-                            </button>
+                        {/* --- CARD 1: INICIAR EMERGENCIA (Styled like the "Emergencia en curso" card) --- */}
+                        <div className="w-full bg-[var(--surface)] rounded-[40px] border-2 border-[var(--vy-neutral-900)] shadow-2xl relative overflow-hidden flex flex-col items-center p-10 text-center">
+                            <div className="absolute top-0 left-0 w-full h-2 bg-red-500" />
+                            <h3 className="text-xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight mb-2">Solicitar Ambulancia</h3>
+                            <p className="text-xs font-bold text-[var(--vy-neutral-400)] mb-10 max-w-[240px]">
+                                Al activar el sistema, todos los veterinarios de la red recibirán tu ubicación.
+                            </p>
 
                             <button
-                                onClick={() => setStep("atencion")}
-                                className="snap-center shrink-0 w-[85vw] md:w-auto bg-white p-10 rounded-[45px] border-2 border-transparent hover:border-[var(--vy-neutral-900)] shadow-xl transition-all hover:scale-[1.03] group flex flex-col items-center text-center"
+                                onClick={() => setStep(1)}
+                                className="group relative flex flex-col items-center justify-center outline-none mb-4"
                             >
-                                <div className="w-24 h-24 rounded-full bg-[var(--vy-neutral-50)] text-[var(--vy-neutral-900)] flex items-center justify-center text-5xl mb-6 shadow-inner group-hover:bg-[var(--vy-neutral-900)] group-hover:text-white transition-all">📞</div>
-                                <h3 className="text-2xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight mb-2">Atención Rápida</h3>
-                                <p className="text-sm font-bold text-[var(--vy-neutral-500)] max-w-[200px]">Llamada directa o WhatsApp con veterinarios especialistas.</p>
-                                <div className="mt-auto pt-8 px-6 py-3 bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] rounded-full text-xs font-black uppercase tracking-widest">Ver Números</div>
+                                <div className="relative flex items-center justify-center mb-10">
+                                    <motion.div className="absolute rounded-full bg-red-500/10" animate={{ scale: [1, 1.4], opacity: [0.6, 0] }} transition={{ repeat: Infinity, duration: 2, ease: "easeOut" }} style={{ width: "140px", height: "140px" }} />
+                                    <div className="relative z-10 w-32 h-32 rounded-full bg-red-500 shadow-xl flex items-center justify-center border-[6px] border-white group-hover:scale-105 transition-transform active:scale-95">
+                                        <svg viewBox="0 0 24 24" className="w-16 h-16 text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <h3 className="text-4xl font-black text-[var(--vy-neutral-900)] uppercase leading-none">SOS</h3>
+                                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-red-500 mt-4">Iniciar Protocolo</p>
                             </button>
+                        </div>
+
+                        {/* --- CARD 2: ATENCIÓN RÁPIDA (Directly visible) --- */}
+                        <div className="w-full">
+                            <QuickCallPanel />
                         </div>
                     </motion.div>
                 )}
@@ -243,28 +251,28 @@ export default function SOSClient({
                 {step === 1 && (
                     <motion.div
                         key="step-1"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
                         className="max-w-xl mx-auto pt-10"
                     >
-                        <div className="bg-white rounded-[40px] p-10 border border-[var(--vy-neutral-100)] shadow-2xl">
-                            <div className="flex items-center gap-6 mb-12">
-                                <button onClick={handleBack} className="w-14 h-14 rounded-2xl bg-[var(--vy-neutral-50)] border border-[var(--vy-neutral-100)] flex items-center justify-center text-2xl font-bold hover:bg-[var(--vy-neutral-100)] transition-all">←</button>
-                                <h2 className="text-3xl font-black text-[var(--vy-neutral-900)] tracking-tight">Elige tu Mascota</h2>
+                        <div className="bg-[var(--surface)] rounded-[40px] p-8 border-2 border-[var(--vy-neutral-900)] shadow-2xl">
+                            <div className="flex items-center gap-6 mb-10">
+                                <button onClick={handleBack} className="w-12 h-12 rounded-2xl bg-[var(--surface)] border border-[var(--vy-neutral-200)] flex items-center justify-center text-xl font-bold shadow-sm hover:bg-[var(--vy-neutral-50)] transition-all">←</button>
+                                <h2 className="text-xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">Elige tu Mascota</h2>
                             </div>
-                            <div className="flex overflow-x-auto md:grid gap-5 pb-8 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
+                            <div className="grid gap-4">
                                 {pets.map((pet) => (
                                     <button
                                         key={pet.id}
                                         onClick={() => { setFormData({ ...formData, pet_id: pet.id }); handleNext(); }}
-                                        className={`snap-center shrink-0 w-[85vw] md:w-full p-6 rounded-[32px] border-2 text-left flex items-center gap-6 transition-all ${formData.pet_id === pet.id ? "border-red-500 bg-red-50 shadow-lg scale-[1.02]" : "border-[var(--vy-neutral-50)] bg-[var(--vy-neutral-50)] hover:border-[var(--vy-neutral-100)]"}`}
+                                        className={`p-5 rounded-[28px] border-2 text-left flex items-center gap-6 transition-all ${formData.pet_id === pet.id ? "border-red-500 bg-red-50/10" : "border-transparent bg-[var(--vy-neutral-50)] hover:border-[var(--vy-neutral-100)]"}`}
                                     >
-                                        <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center text-4xl overflow-hidden shadow-sm border border-[var(--vy-neutral-100)]">
+                                        <div className="w-16 h-16 rounded-2xl bg-[var(--surface)] border-2 border-[var(--vy-neutral-100)] shadow-md overflow-hidden shrink-0">
                                             {pet.photo_url ? <img src={pet.photo_url} alt="" className="w-full h-full object-cover" /> : "🐾"}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="font-black text-[var(--vy-neutral-900)] text-xl uppercase tracking-tight truncate">{pet.name}</h3>
-                                            <p className="text-[10px] font-black text-[var(--vy-neutral-400)] uppercase tracking-widest mt-1">{pet.species}</p>
+                                            <h3 className="font-black text-[var(--vy-neutral-900)] text-base uppercase tracking-tight truncate">{pet.name}</h3>
+                                            <p className="text-[9px] font-black text-[var(--vy-neutral-400)] uppercase tracking-widest mt-0.5">{pet.species}</p>
                                         </div>
                                     </button>
                                 ))}
@@ -276,29 +284,29 @@ export default function SOSClient({
                 {step === 2 && (
                     <motion.div
                         key="step-2"
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="max-w-xl mx-auto pt-10"
                     >
-                        <div className="bg-white rounded-[40px] p-10 border border-[var(--vy-neutral-100)] shadow-2xl space-y-10">
+                        <div className="bg-[var(--surface)] rounded-[40px] p-8 border-2 border-[var(--vy-neutral-900)] shadow-2xl space-y-8">
                             <div className="flex items-center gap-6">
-                                <button onClick={handleBack} disabled={loading} className="w-14 h-14 rounded-full bg-[var(--vy-neutral-50)] border border-[var(--vy-neutral-100)] flex items-center justify-center text-2xl font-bold hover:bg-[var(--vy-neutral-100)] transition-all">←</button>
-                                <h2 className="text-3xl font-black text-[var(--vy-neutral-900)] tracking-tight">¿Qué ocurre?</h2>
+                                <button onClick={handleBack} disabled={loading} className="w-12 h-12 rounded-2xl bg-[var(--surface)] border border-[var(--vy-neutral-200)] flex items-center justify-center text-xl font-bold shadow-sm hover:bg-[var(--vy-neutral-50)] transition-all">←</button>
+                                <h2 className="text-xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">¿Qué ocurre?</h2>
                             </div>
-                            <div className="space-y-4">
-                                <label className="text-xs font-black uppercase tracking-widest text-[var(--vy-neutral-400)] ml-4">Descripción de la situación</label>
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-[var(--vy-neutral-400)] ml-2">Descripción de la situación</label>
                                 <textarea
-                                    rows={5}
+                                    rows={4}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    placeholder="Explica qué le sucede a tu mascota..."
-                                    className="w-full p-8 rounded-[35px] bg-[var(--vy-neutral-50)] border-2 border-transparent focus:border-red-400 focus:bg-white outline-none resize-none font-medium text-base transition-all shadow-inner"
+                                    placeholder="Explica brevemente qué sucede..."
+                                    className="w-full p-6 rounded-[28px] bg-[var(--vy-neutral-50)] border-2 border-transparent focus:border-red-400 focus:bg-white outline-none resize-none font-bold text-sm transition-all"
                                 />
                             </div>
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading || !formData.description.trim()}
-                                className="w-full py-6 bg-red-500 text-white font-black rounded-full text-lg hover:bg-red-600 active:scale-95 shadow-xl shadow-red-200 transition-all disabled:opacity-50 uppercase tracking-[0.2em]"
+                                className="w-full py-5 bg-red-500 text-white font-black rounded-full text-base hover:bg-red-600 active:scale-95 shadow-xl shadow-red-200 transition-all disabled:opacity-50 uppercase tracking-[0.2em]"
                             >
                                 {loading ? "Conectando..." : "ENVIAR SOS"}
                             </button>

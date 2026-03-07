@@ -11,7 +11,7 @@ function PetCard({ pet }: { pet: any }) {
     };
 
     return (
-        <Link href={`/dashboard/pets/${pet.id}`} className="group relative block bg-white rounded-3xl p-6 shadow-sm border border-[var(--vy-neutral-200)] hover:shadow-md hover:border-[var(--vy-primary-200)] transition-all">
+        <Link href={`/dashboard/pets/${pet.id}`} className="group relative block bg-[var(--surface)] rounded-3xl p-6 shadow-sm border border-[var(--vy-neutral-200)] hover:shadow-md hover:border-[var(--vy-primary-200)] transition-all">
             <div className="absolute top-4 right-4 text-2xl opacity-10 group-hover:opacity-100 transition-opacity">
                 {getAvatarFallback(pet.name, pet.species)}
             </div>
@@ -79,7 +79,7 @@ export default async function PetsDashboardPage() {
             }
         >
             {!pets || pets.length === 0 ? (
-                <div className="bg-white rounded-3xl border border-dashed border-[var(--vy-neutral-300)] p-12 text-center">
+                <div className="bg-[var(--surface)] rounded-3xl border border-dashed border-[var(--vy-neutral-300)] p-12 text-center">
                     <div className="text-5xl mb-4">🏠</div>
                     <h3 className="text-lg font-semibold text-[var(--vy-neutral-800)]">Sin mascotas aún</h3>
                     <p className="mt-2 text-sm text-[var(--vy-neutral-500)] max-w-sm mx-auto">

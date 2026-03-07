@@ -56,61 +56,69 @@ export default function DiaryEditorClient({
     };
 
     const statusLabel = () => {
-        if (status === "saving") return <span className="text-teal-600 font-medium">⏳ Guardando...</span>;
-        if (status === "saved") return <span className="text-green-600 font-medium">✅ Guardado</span>;
-        if (status === "error") return <span className="text-red-600 font-medium">❌ Error al guardar</span>;
-        return <span className="text-[var(--vy-neutral-400)]">Auto-guardado activado</span>;
+        if (status === "saving") return <span className="text-teal-600 font-black uppercase tracking-widest text-[9px]">⏳ Gravando...</span>;
+        if (status === "saved") return <span className="text-green-600 font-black uppercase tracking-widest text-[9px]">✅ Sincronizado</span>;
+        if (status === "error") return <span className="text-red-600 font-black uppercase tracking-widest text-[9px]">❌ Error de Conexión</span>;
+        return <span className="text-[var(--vy-neutral-400)] font-black uppercase tracking-widest text-[9px]">Auto-guardado activo</span>;
     };
 
     return (
         <div className="space-y-4">
             {/* Error banner */}
+            {/* Error banner */}
             {status === "error" && errorMsg && (
-                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-800">
-                    <p className="font-bold mb-1">⚠️ No se pudo guardar</p>
-                    <p className="font-mono text-xs break-all">{errorMsg}</p>
-                    <p className="mt-2 text-red-600 text-xs">
-                        Si ves "relation does not exist", necesitas crear la tabla en Supabase → SQL Editor.
-                    </p>
+                <div className="bg-red-500/10 border-2 border-red-500/20 rounded-2xl px-6 py-5 text-[10px] text-red-700 font-bold uppercase tracking-widest">
+                    <p className="flex items-center gap-2 mb-2">⚠️ <span className="font-black">Fallo en la sincronización</span></p>
+                    <p className="opacity-70 font-mono text-[9px] break-all mb-4">{errorMsg}</p>
+                    <div className="pt-4 border-t border-red-500/10 text-[8px] opacity-60">
+                        Si el error persiste: Supabase → SQL Editor → Crear tabla de notas.
+                    </div>
                 </div>
             )}
 
             {/* Toolbar */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 text-xs text-[var(--vy-neutral-500)]">
-                    <span>📝 {wordCount} palabras</span>
-                    <span>·</span>
+            {/* Toolbar */}
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--surface)] border-2 border-[var(--border)] text-[9px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest shadow-sm">
+                        <span>📝 {wordCount} PALABRAS</span>
+                        <span className="opacity-30">|</span>
+                        <span>{content.length} CHARS</span>
+                    </div>
                     {statusLabel()}
                 </div>
                 <button
                     onClick={handleManualSave}
                     disabled={status === "saving"}
-                    className="px-4 py-1.5 bg-teal-600 text-white text-xs font-bold rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50"
+                    className="px-6 py-3 bg-teal-600 text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-teal-700 transition-all shadow-lg shadow-teal-500/20 disabled:opacity-50 active:scale-90"
                 >
-                    {status === "saving" ? "Guardando..." : "Guardar ahora"}
+                    {status === "saving" ? "Sincronizando..." : "Guardar ahora"}
                 </button>
             </div>
 
             {/* Editor */}
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
-                <div className="h-1 bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600" />
+            {/* Editor */}
+            <div className="bg-[var(--surface)] rounded-[48px] border-2 border-[var(--border)] shadow-2xl overflow-hidden relative group">
+                <div className="h-2 bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 opacity-60 group-hover:opacity-100 transition-opacity" />
                 <textarea
                     value={content}
                     onChange={handleChange}
-                    placeholder={`Escribe aquí tus notas del día...\n\nPuedes anotar:\n• Observaciones clínicas\n• Pendientes administrativos\n• Recordatorios personales\n• Ideas y reflexiones`}
-                    className="w-full min-h-[65vh] px-8 py-6 text-base leading-8 text-[var(--vy-neutral-900)] placeholder-[var(--vy-neutral-300)] resize-none outline-none"
+                    placeholder={`Empieza a documentar tu jornada...\n\nSugerencias:\n• Observaciones de pacientes complejos\n• Logística del consultorio\n• Reflexiones de mejora continua`}
+                    className="w-full min-h-[70vh] px-10 md:px-14 py-10 md:py-14 text-lg md:text-xl font-medium leading-[2.5rem] md:leading-[3rem] text-[var(--vy-neutral-900)] placeholder-[var(--vy-neutral-300)] resize-none outline-none bg-transparent"
                     style={{
-                        backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, #e8f4f4 31px, #e8f4f4 32px)",
-                        lineHeight: "2rem",
+                        backgroundImage: "repeating-linear-gradient(transparent, transparent calc(2.5rem - 1px), var(--border) calc(2.5rem - 1px), var(--border) 2.5rem)",
+                        backgroundAttachment: "local",
                     }}
                     spellCheck
                     autoFocus
                 />
-                <div className="px-8 py-3 border-t border-[var(--vy-neutral-100)] bg-[var(--vy-neutral-50)] flex items-center justify-between">
-                    <p className="text-[11px] text-[var(--vy-neutral-400)]">
-                        🔒 Solo visible para ti · {new Date(date + "T12:00:00").toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" })}
+                <div className="px-10 md:px-14 py-6 border-t-2 border-[var(--border)] bg-[var(--background)] flex items-center justify-between">
+                    <p className="text-[10px] font-black text-[var(--vy-neutral-400)] uppercase tracking-widest opacity-60 flex items-center gap-2">
+                        <span className="text-sm">🔒</span> Cifrado de extremo a extremo · {new Date(date + "T12:00:00").toLocaleDateString("es-PE", { day: "numeric", month: "long", year: "numeric" })}
                     </p>
-                    <p className="text-[11px] text-[var(--vy-neutral-400)]">{content.length} caracteres</p>
+                    <div className="flex gap-4">
+                        <div className="w-2 h-2 rounded-full bg-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.5)] animate-pulse" />
+                    </div>
                 </div>
             </div>
         </div>

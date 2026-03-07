@@ -32,7 +32,7 @@ export default async function EmergencyRoomPage(props: { params: Promise<{ id: s
     }
 
     return (
-        <div className="flex flex-col h-[calc(100vh-100px)] -mx-6 -my-6 lg:m-0 bg-white lg:rounded-3xl lg:border border-[var(--vy-neutral-200)] lg:shadow-xl overflow-hidden max-w-5xl mx-auto">
+        <div className="flex flex-col min-h-[calc(100vh-100px)] -mx-6 -my-6 lg:m-0 bg-[var(--surface)] lg:rounded-3xl overflow-hidden max-w-[1200px] mx-auto justify-center">
             <EmergencyRoomClient
                 emergency={emergency}
                 initialMessages={msgsRes.data || []}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { addManualPatient } from "./actions";
@@ -10,6 +10,13 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
     const [modalView, setModalView] = useState<"selection" | "manual" | "qr">("selection");
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
 
     const closeAddModal = () => {
         setIsAddModalOpen(false);
@@ -74,15 +81,15 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-white rounded-3xl p-16 border border-[var(--vy-neutral-200)] flex flex-col items-center justify-center text-center"
+                    className="bg-[var(--surface)] rounded-[40px] p-20 border-2 border-dashed border-[var(--border)] flex flex-col items-center justify-center text-center shadow-sm"
                 >
-                    <div className="w-20 h-20 bg-[var(--vy-neutral-50)] rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner">
+                    <div className="w-24 h-24 bg-[var(--vy-neutral-100)] rounded-[32px] flex items-center justify-center text-5xl mb-8 shadow-inner ring-4 ring-[var(--border)]/50">
                         🐾
                     </div>
-                    <h2 className="text-xl font-bold text-[var(--vy-neutral-900)]">
+                    <h2 className="text-2xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">
                         Directorio Vacío
                     </h2>
-                    <p className="text-[var(--vy-neutral-500)] max-w-sm mt-2">
+                    <p className="text-[var(--vy-neutral-500)] max-w-sm mt-4 text-xs font-bold uppercase tracking-widest leading-loose">
                         Aún no tienes pacientes registrados. Utiliza el botón de arriba para añadir una mascota a tu historial clínico.
                     </p>
                 </motion.div>
@@ -101,41 +108,41 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="bg-white rounded-3xl p-5 border border-[var(--vy-neutral-200)] hover:border-teal-300 hover:shadow-lg transition-all group flex flex-col"
+                                className="bg-[var(--surface)] rounded-[40px] p-6 border-2 border-[var(--border)] hover:border-teal-500/50 hover:shadow-xl hover:shadow-teal-500/5 transition-all group flex flex-col shadow-sm"
                             >
-                                <div className="flex items-center gap-4 mb-4">
-                                    <div className="w-16 h-16 rounded-full bg-teal-50 border-2 border-teal-100 flex items-center justify-center overflow-hidden shrink-0">
+                                <div className="flex items-center gap-5 mb-6">
+                                    <div className="w-20 h-20 rounded-[28px] bg-[var(--vy-neutral-100)] border-2 border-[var(--border)] flex items-center justify-center overflow-hidden shrink-0 shadow-sm group-hover:scale-105 transition-transform">
                                         {pet.photo_url ? (
                                             // eslint-disable-next-line @next/next/no-img-element
                                             <img src={pet.photo_url} alt={pet.name} className="w-full h-full object-cover" />
                                         ) : (
-                                            <span className="text-2xl">🐕</span>
+                                            <span className="text-3xl">{pet.species === 'cat' ? '🐱' : '🐕'}</span>
                                         )}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="text-lg font-bold text-[var(--vy-neutral-900)] truncate">
+                                        <h3 className="text-xl font-black text-[var(--vy-neutral-900)] truncate uppercase tracking-tight">
                                             {pet.name}
                                         </h3>
-                                        <p className="text-sm text-[var(--vy-neutral-500)] truncate">
+                                        <p className="text-[10px] font-black text-[var(--vy-neutral-500)] truncate uppercase tracking-widest opacity-70">
                                             {pet.breed || "Raza desconocida"}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 gap-2 mt-auto">
-                                    <div className="bg-[var(--vy-neutral-50)] rounded-xl py-2 px-3 flex flex-col items-center">
-                                        <span className="text-xs text-[var(--vy-neutral-500)] font-medium">Edad</span>
-                                        <span className="font-bold text-[var(--vy-neutral-800)]">{age} años</span>
+                                <div className="grid grid-cols-2 gap-3 mt-auto">
+                                    <div className="bg-[var(--vy-neutral-100)] rounded-2xl py-3 px-3 flex flex-col items-center border border-[var(--border)] shadow-inner">
+                                        <span className="text-[9px] text-[var(--vy-neutral-500)] font-black uppercase tracking-widest mb-1">Edad</span>
+                                        <span className="font-black text-sm text-[var(--vy-neutral-900)]">{age} Años</span>
                                     </div>
-                                    <div className="bg-[var(--vy-neutral-50)] rounded-xl py-2 px-3 flex flex-col items-center">
-                                        <span className="text-xs text-[var(--vy-neutral-500)] font-medium">Peso</span>
-                                        <span className="font-bold text-[var(--vy-neutral-800)]">{pet.weight_kg} kg</span>
+                                    <div className="bg-[var(--vy-neutral-100)] rounded-2xl py-3 px-3 flex flex-col items-center border border-[var(--border)] shadow-inner">
+                                        <span className="text-[9px] text-[var(--vy-neutral-500)] font-black uppercase tracking-widest mb-1">Peso</span>
+                                        <span className="font-black text-sm text-[var(--vy-neutral-900)]">{pet.weight_kg} Kg</span>
                                     </div>
                                 </div>
                                 <Link
                                     href={`/vet-dashboard/pets/${pet.id}`}
-                                    className="w-full mt-4 py-2 block text-center rounded-xl text-sm font-medium text-teal-600 bg-teal-50 hover:bg-teal-100 transition-colors opacity-0 group-hover:opacity-100"
+                                    className="w-full mt-6 py-4 block text-center rounded-2xl text-[10px] font-black uppercase tracking-widest text-teal-600 bg-teal-500/10 hover:bg-teal-500 hover:text-white transition-all shadow-sm active:scale-95"
                                 >
-                                    Ver Historial
+                                    Abrir Expediente
                                 </Link>
                             </motion.div>
                         );
@@ -151,11 +158,11 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-white rounded-[28px] p-6 sm:p-8 max-w-md w-full shadow-2xl relative"
+                            className="bg-[var(--surface)] rounded-[40px] p-8 sm:p-10 max-w-md w-full shadow-2xl relative border-2 border-[var(--border)]"
                         >
                             <button
                                 onClick={closeAddModal}
-                                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-500)] hover:bg-[var(--vy-neutral-200)] transition-colors z-10"
+                                className="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-500)] hover:bg-[var(--vy-neutral-200)] transition-colors z-10 border border-[var(--border)]"
                             >
                                 ✕
                             </button>
@@ -170,10 +177,10 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                             exit={{ opacity: 0, x: -20 }}
                                             className="space-y-4 absolute inset-0"
                                         >
-                                            <h3 className="text-2xl font-bold text-[var(--vy-neutral-900)] mb-1">
+                                            <h3 className="text-3xl font-black text-[var(--vy-neutral-900)] mb-2 uppercase tracking-tight">
                                                 Añadir paciente
                                             </h3>
-                                            <p className="text-[var(--vy-neutral-500)] text-sm mb-6">
+                                            <p className="text-[var(--vy-neutral-500)] text-[10px] font-bold uppercase tracking-widest mb-8">
                                                 ¿Cómo deseas vincular a la mascota a tu clínica?
                                             </p>
 
@@ -181,14 +188,14 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                                 onClick={() => setModalView("qr")}
-                                                className="w-full text-left p-5 rounded-2xl border-2 border-teal-100 bg-teal-50 hover:border-teal-300 transition-colors flex items-start gap-4 group"
+                                                className="w-full text-left p-6 rounded-[32px] border-2 border-teal-500/20 bg-teal-500/5 hover:border-teal-500 transition-all flex items-start gap-5 group shadow-sm"
                                             >
-                                                <div className="w-12 h-12 shrink-0 bg-white rounded-xl shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                                                <div className="w-14 h-14 shrink-0 bg-[var(--surface)] rounded-2xl shadow-md flex items-center justify-center text-3xl group-hover:scale-110 transition-transform border border-teal-500/10">
                                                     📷
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-bold text-teal-900 text-lg">Escanear código QR</h4>
-                                                    <p className="text-teal-700/80 text-sm mt-1 leading-relaxed">
+                                                    <h4 className="font-black text-teal-600 text-lg uppercase tracking-tight">Escanear código QR</h4>
+                                                    <p className="text-teal-700/60 dark:text-teal-400/60 text-[10px] font-bold uppercase tracking-widest mt-1.5 leading-relaxed">
                                                         Toma una foto o escanea el código QR del dueño para vincular automáticamente su historial.
                                                     </p>
                                                 </div>
@@ -198,14 +205,14 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
                                                 onClick={() => setModalView("manual")}
-                                                className="w-full text-left p-5 rounded-2xl border-2 border-[var(--vy-neutral-100)] hover:border-[var(--vy-neutral-300)] transition-colors flex items-start gap-4 group"
+                                                className="w-full text-left p-6 rounded-[32px] border-2 border-[var(--border)] hover:border-teal-500/30 transition-all flex items-start gap-5 group shadow-sm"
                                             >
-                                                <div className="w-12 h-12 shrink-0 bg-[var(--vy-neutral-50)] border border-[var(--vy-neutral-200)] rounded-xl flex items-center justify-center text-xl group-hover:scale-110 transition-transform text-[var(--vy-neutral-600)]">
+                                                <div className="w-14 h-14 shrink-0 bg-[var(--vy-neutral-100)] border-2 border-[var(--border)] rounded-2xl flex items-center justify-center text-2xl group-hover:scale-110 transition-transform text-[var(--vy-neutral-600)] shadow-inner">
                                                     📝
                                                 </div>
                                                 <div>
-                                                    <h4 className="font-bold text-[var(--vy-neutral-900)] text-lg">Registro Manual</h4>
-                                                    <p className="text-[var(--vy-neutral-500)] text-sm mt-1 leading-relaxed">
+                                                    <h4 className="font-black text-[var(--vy-neutral-900)] text-lg uppercase tracking-tight">Registro Manual</h4>
+                                                    <p className="text-[var(--vy-neutral-500)] text-[10px] font-bold uppercase tracking-widest mt-1.5 leading-relaxed">
                                                         Ingresa los datos de la mascota a mano si el dueño no tiene la aplicación instalada.
                                                     </p>
                                                 </div>
@@ -221,31 +228,31 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                             exit={{ opacity: 0, x: 20 }}
                                             className="absolute inset-0 overflow-y-auto pb-4 pr-2 custom-scrollbar"
                                         >
-                                            <div className="flex items-center gap-3 mb-6">
+                                            <div className="flex items-center gap-4 mb-8">
                                                 <button
                                                     onClick={() => setModalView("selection")}
-                                                    className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-200)] transition-colors"
+                                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-200)] transition-colors border border-[var(--border)]"
                                                 >
-                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
-                                                <h3 className="text-xl font-bold text-[var(--vy-neutral-900)]">
+                                                <h3 className="text-2xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">
                                                     Registro Manual
                                                 </h3>
                                             </div>
 
                                             <form onSubmit={handleFormSubmit} className="space-y-4">
                                                 {/* Photo Upload Area */}
-                                                <div className="flex justify-center mb-6">
-                                                    <div className="relative w-28 h-28 rounded-full border-2 border-dashed border-[var(--vy-neutral-300)] bg-[var(--vy-neutral-50)] hover:bg-[var(--vy-neutral-100)] transition-colors flex flex-col items-center justify-center cursor-pointer group overflow-hidden">
+                                                <div className="flex justify-center mb-8">
+                                                    <div className="relative w-32 h-32 rounded-[32px] border-2 border-dashed border-[var(--border)] bg-[var(--vy-neutral-100)] hover:bg-[var(--vy-neutral-200)] transition-all flex flex-col items-center justify-center cursor-pointer group overflow-hidden shadow-inner">
                                                         {photoPreview ? (
                                                             // eslint-disable-next-line @next/next/no-img-element
                                                             <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
                                                         ) : (
                                                             <>
-                                                                <span className="text-3xl mb-1 group-hover:scale-110 transition-transform">📷</span>
-                                                                <span className="text-xs text-[var(--vy-neutral-500)] font-medium">Subir foto</span>
+                                                                <span className="text-4xl mb-2 group-hover:scale-110 transition-transform">📷</span>
+                                                                <span className="text-[9px] text-[var(--vy-neutral-500)] font-black uppercase tracking-widest">Subir foto</span>
                                                             </>
                                                         )}
                                                         <input
@@ -259,7 +266,7 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                 </div>
 
                                                 <div>
-                                                    <label htmlFor="name" className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
+                                                    <label htmlFor="name" className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest mb-2 px-1">
                                                         Nombre de la mascota
                                                     </label>
                                                     <input
@@ -268,13 +275,13 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                         type="text"
                                                         required
                                                         placeholder="Ej. Firulais"
-                                                        className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                                                        className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold placeholder:text-[var(--vy-neutral-300)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                                     />
                                                 </div>
 
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div>
-                                                        <label htmlFor="breed" className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
+                                                        <label htmlFor="breed" className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest mb-2 px-1">
                                                             Raza
                                                         </label>
                                                         <input
@@ -282,12 +289,12 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                             name="breed"
                                                             type="text"
                                                             placeholder="Ej. Golden Retriever"
-                                                            className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                                                            className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold placeholder:text-[var(--vy-neutral-300)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                                         />
                                                     </div>
                                                     <div>
-                                                        <label htmlFor="age" className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
-                                                            Edad (Años)
+                                                        <label htmlFor="age" className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest mb-2 px-1">
+                                                            Edad
                                                         </label>
                                                         <input
                                                             id="age"
@@ -295,13 +302,13 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                             type="number"
                                                             required
                                                             placeholder="Ej. 3"
-                                                            className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                                                            className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold placeholder:text-[var(--vy-neutral-300)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                                         />
                                                     </div>
                                                 </div>
 
                                                 <div>
-                                                    <label htmlFor="weight" className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">
+                                                    <label htmlFor="weight" className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest mb-2 px-1">
                                                         Peso (kg)
                                                     </label>
                                                     <input
@@ -311,7 +318,7 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                         step="0.1"
                                                         required
                                                         placeholder="Ej. 12.5"
-                                                        className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none transition-all"
+                                                        className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold placeholder:text-[var(--vy-neutral-300)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                                     />
                                                 </div>
 
@@ -319,15 +326,15 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                                     whileTap={{ scale: 0.97 }}
                                                     type="submit"
                                                     disabled={isSubmitting}
-                                                    className="w-full py-3.5 mt-4 flex items-center justify-center gap-2 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-md hover:shadow-lg transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                                                    className="w-full py-4 mt-6 flex items-center justify-center gap-2 rounded-2xl font-black text-xs uppercase tracking-widest text-white bg-teal-600 hover:bg-teal-700 shadow-xl shadow-teal-500/20 transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                                                 >
                                                     {isSubmitting ? (
                                                         <>
                                                             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                                            Guardando...
+                                                            Procesando...
                                                         </>
                                                     ) : (
-                                                        "Guardar Paciente"
+                                                        "Confirmar Registro"
                                                     )}
                                                 </motion.button>
                                             </form>
@@ -342,23 +349,23 @@ export default function VetPetsClient({ pets }: { pets: any[] }) {
                                             exit={{ opacity: 0, x: 20 }}
                                             className="absolute inset-0 flex flex-col"
                                         >
-                                            <div className="flex items-center gap-3 mb-6">
+                                            <div className="flex items-center gap-4 mb-8">
                                                 <button
                                                     onClick={() => setModalView("selection")}
-                                                    className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-200)] transition-colors"
+                                                    className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-200)] transition-colors border border-[var(--border)]"
                                                 >
-                                                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                                                     </svg>
                                                 </button>
-                                                <h3 className="text-xl font-bold text-[var(--vy-neutral-900)]">
-                                                    Escáner QR
+                                                <h3 className="text-2xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">
+                                                    Escáner SOS
                                                 </h3>
                                             </div>
-                                            <div className="flex-1 rounded-2xl bg-black flex items-center justify-center overflow-hidden relative">
+                                            <div className="flex-1 rounded-[32px] bg-black flex items-center justify-center overflow-hidden relative shadow-inner ring-4 ring-black/10">
                                                 <div className="absolute inset-x-0 h-[2px] bg-teal-500/80 animate-[ping_3s_linear_infinite] top-1/2" />
-                                                <div className="absolute inset-0 border-[40px] border-black/50" />
-                                                <p className="absolute bottom-6 text-white text-sm font-medium text-center px-4 z-10">
+                                                <div className="absolute inset-0 border-[60px] border-black/50" />
+                                                <p className="absolute bottom-10 text-white text-[10px] font-black uppercase tracking-[0.2em] text-center px-10 z-10 leading-relaxed">
                                                     Apunta la cámara al código QR de la mascota
                                                 </p>
                                             </div>

@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import ThemeSwitcher from "../dashboard/ThemeSwitcher";
 
 const navItems = [
     { href: "/vet-dashboard", label: "Inicio", icon: "🏠" },
@@ -22,6 +23,11 @@ export default function VetDashboardLayout({
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const handleSignOut = () => {
         setIsLogoutModalOpen(true);
@@ -36,15 +42,15 @@ export default function VetDashboardLayout({
     };
 
     return (
-        <div className="min-h-screen bg-[var(--vy-neutral-50)] flex">
+        <div className="min-h-screen bg-[var(--background)] flex">
             {/* ── Desktop Sidebar ── */}
-            <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-[var(--vy-neutral-200)] p-4 fixed inset-y-0 left-0 z-30">
+            <aside className="hidden lg:flex flex-col w-64 bg-[var(--surface)] border-r border-[var(--border)] p-4 fixed inset-y-0 left-0 z-30">
                 {/* Logo */}
-                <Link href="/vet-dashboard" className="flex items-center gap-2 px-3 py-2 mb-6">
-                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
-                        <span className="text-white text-lg">⚕️</span>
+                <Link href="/vet-dashboard" className="flex items-center gap-2 px-3 py-2 mb-6 group">
+                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center shadow-lg transition-transform group-hover:scale-105 active:scale-95">
+                        <span className="text-white text-xl">⚕️</span>
                     </div>
-                    <span className="text-xl font-bold tracking-tight text-[var(--vy-neutral-900)]">
+                    <span className="text-xl font-black tracking-tight text-[var(--vy-neutral-900)]">
                         Vet<span className="text-teal-600">Admin</span>
                     </span>
                 </Link>
@@ -62,22 +68,22 @@ export default function VetDashboardLayout({
                                 key={item.href}
                                 href={item.href}
                                 className={`relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200
-                  ${isActive
-                                        ? "text-teal-700 bg-teal-50"
-                                        : "text-[var(--vy-neutral-600)] hover:text-[var(--vy-neutral-900)] hover:bg-[var(--vy-neutral-100)]"
+                  ${mounted && isActive
+                                        ? "text-[var(--vy-primary-700)] bg-[var(--vy-primary-500)]/10"
+                                        : "text-[var(--vy-neutral-600)] hover:text-[var(--vy-neutral-900)] hover:bg-[var(--vy-neutral-50)]"
                                     }`}
                             >
-                                {isActive && (
+                                {mounted && isActive && (
                                     <motion.div
                                         layoutId="sidebar-active-vet"
-                                        className="absolute inset-0 rounded-xl bg-teal-50 border border-teal-200"
+                                        className="absolute inset-0 rounded-xl bg-[var(--vy-primary-500)]/5 border border-[var(--vy-primary-500)]/20"
                                         transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                     />
                                 )}
                                 <span className="relative text-lg">{item.icon}</span>
                                 <span className="relative">{item.label}</span>
                                 {item.href === "/vet-dashboard/sos" && (
-                                    <span className="relative ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                    <span className="relative ml-auto w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
                                 )}
                             </Link>
                         );
@@ -85,12 +91,13 @@ export default function VetDashboardLayout({
                 </nav>
 
                 {/* Profile section */}
-                <div className="border-t border-[var(--vy-neutral-200)] pt-4 mt-4 space-y-2">
+                <div className="border-t border-[var(--vy-neutral-200)] pt-4 mt-4 space-y-1">
+                    <ThemeSwitcher />
                     <Link
                         href="/vet-dashboard/profile"
                         className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-100)] transition-colors"
                     >
-                        <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-sm">
+                        <div className="w-8 h-8 rounded-full bg-teal-100/30 flex items-center justify-center text-sm">
                             👨‍⚕️
                         </div>
                         <span>Mi Clínica</span>
@@ -108,7 +115,7 @@ export default function VetDashboardLayout({
             </aside>
 
             {/* ── Mobile Header ── */}
-            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white/80 backdrop-blur-xl border-b border-[var(--vy-neutral-200)] flex items-center justify-between px-4 z-40">
+            <header className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[var(--surface)]/80 backdrop-blur-xl border-b border-[var(--border)] flex items-center justify-between px-4 z-40">
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
                     className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-[var(--vy-neutral-100)] transition-colors"
@@ -142,13 +149,13 @@ export default function VetDashboardLayout({
                             animate={{ x: 0 }}
                             exit={{ x: -280 }}
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                            className="lg:hidden fixed inset-y-0 left-0 w-72 bg-white z-50 p-4 shadow-xl"
+                            className="lg:hidden fixed inset-y-0 left-0 w-72 bg-[var(--surface)] z-50 p-4 shadow-xl"
                         >
                             <div className="flex items-center gap-2 px-3 py-2 mb-6">
-                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 flex items-center justify-center shadow-md">
                                     <span className="text-white text-lg">⚕️</span>
                                 </div>
-                                <span className="text-xl font-bold tracking-tight text-[var(--vy-neutral-900)]">
+                                <span className="text-xl font-black tracking-tight text-[var(--vy-neutral-900)]">
                                     Vet<span className="text-teal-600">Admin</span>
                                 </span>
                             </div>
@@ -164,8 +171,8 @@ export default function VetDashboardLayout({
                                             href={item.href}
                                             onClick={() => setSidebarOpen(false)}
                                             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
-                        ${isActive
-                                                    ? "text-teal-700 bg-teal-50 border border-teal-200"
+                        ${mounted && isActive
+                                                    ? "text-[var(--vy-primary-700)] bg-[var(--vy-primary-500)]/10 border border-[var(--vy-primary-500)]/20"
                                                     : "text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-100)]"
                                                 }`}
                                         >
@@ -176,7 +183,8 @@ export default function VetDashboardLayout({
                                 })}
                             </nav>
 
-                            <div className="border-t border-[var(--vy-neutral-200)] pt-4 mt-auto">
+                            <div className="border-t border-[var(--vy-neutral-200)] pt-4 mt-auto space-y-1">
+                                <ThemeSwitcher />
                                 <button
                                     onClick={handleSignOut}
                                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-500 hover:bg-red-50 transition-colors"
@@ -191,7 +199,7 @@ export default function VetDashboardLayout({
             </AnimatePresence>
 
             {/* ── Mobile Bottom Nav ── */}
-            <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-white/90 backdrop-blur-xl border-t border-[var(--vy-neutral-200)] flex items-center justify-around px-2 z-40">
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-[var(--surface)]/90 backdrop-blur-xl border-t border-[var(--border)] flex items-center justify-around px-2 z-40">
                 {navItems.map((item) => {
                     const isActive =
                         item.href === "/vet-dashboard"
@@ -202,15 +210,15 @@ export default function VetDashboardLayout({
                             key={item.href}
                             href={item.href}
                             className={`relative flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all text-xs font-medium
-                ${isActive
-                                    ? "text-teal-600"
+                ${mounted && isActive
+                                    ? "text-[var(--vy-primary-600)]"
                                     : "text-[var(--vy-neutral-400)]"
                                 }`}
                         >
-                            {isActive && (
+                            {mounted && isActive && (
                                 <motion.div
                                     layoutId="bottomnav-active-vet"
-                                    className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-teal-500"
+                                    className="absolute -top-px left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-[var(--vy-primary-500)]"
                                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                 />
                             )}
@@ -222,7 +230,7 @@ export default function VetDashboardLayout({
             </nav>
 
             {/* ── Content ── */}
-            <main className="flex-1 lg:ml-64 pt-14 pb-20 lg:pt-0 lg:pb-0">
+            <main className="flex-1 lg:ml-64 pt-14 pb-20 lg:pt-0 lg:pb-0 overflow-y-auto">
                 <motion.div
                     key={pathname}
                     initial={{ opacity: 0, y: 8 }}
@@ -242,7 +250,7 @@ export default function VetDashboardLayout({
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="bg-white rounded-[28px] p-8 max-w-sm w-full shadow-2xl text-center border border-[var(--vy-neutral-100)]"
+                            className="bg-[var(--surface)] rounded-[28px] p-8 max-w-sm w-full shadow-2xl text-center border border-[var(--vy-neutral-100)]"
                         >
                             <div className="w-16 h-16 mx-auto rounded-full bg-red-50 flex items-center justify-center text-3xl mb-4 text-red-500">
                                 🚪

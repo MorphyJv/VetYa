@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useUser } from "@/hooks/useUser";
 import { createClient } from "@/lib/supabase/client";
+import { useTheme, palettes } from "@/providers/ThemeContext";
 
 export default function VetProfilePage() {
     const { user, profile, loading } = useUser();
@@ -14,6 +15,8 @@ export default function VetProfilePage() {
     const [uploadingPhoto, setUploadingPhoto] = useState(false);
     const [photoHover, setPhotoHover] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const { primaryColor, surfaceColor, setPrimaryColor, setSurfaceColor } = useTheme();
 
     const [formData, setFormData] = useState({
         display_name: "",
@@ -153,27 +156,28 @@ export default function VetProfilePage() {
     const initials = profile?.display_name?.charAt(0)?.toUpperCase() || "⚕️";
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
-            <h1 className="text-2xl font-bold text-[var(--vy-neutral-900)]">Mi Perfil</h1>
+        <div className="max-w-3xl mx-auto space-y-10 pb-20">
+            <h1 className="text-4xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">Mi Perfil</h1>
 
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
+            <div className="bg-[var(--surface)] rounded-[48px] border-2 border-[var(--border)] p-10 md:p-14 shadow-2xl shadow-black/5 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-teal-500/5 blur-[100px] -z-10 rounded-full" />
 
                 {/* ── Avatar + name ── */}
-                <div className="flex flex-col sm:flex-row gap-6 sm:items-center mb-8 pb-8 border-b border-[var(--vy-neutral-100)]">
+                <div className="flex flex-col sm:flex-row gap-8 sm:items-center mb-12 pb-12 border-b-2 border-[var(--border)]">
                     <div className="relative shrink-0">
                         <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
                             onMouseEnter={() => setPhotoHover(true)}
                             onMouseLeave={() => setPhotoHover(false)}
-                            className="w-24 h-24 rounded-full overflow-hidden relative focus:outline-none focus:ring-4 focus:ring-teal-300 transition-all"
+                            className="w-32 h-32 rounded-[40px] overflow-hidden relative focus:outline-none focus:ring-4 focus:ring-teal-500/20 transition-all shadow-xl border-4 border-[var(--surface)]"
                             disabled={uploadingPhoto}
                         >
                             {avatarUrl ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={avatarUrl} alt="Foto de perfil" className="w-full h-full object-cover" />
+                                <img src={avatarUrl} alt="Foto de perfil" className="w-full h-full object-cover scale-110" />
                             ) : (
-                                <div className="w-full h-full bg-gradient-to-br from-teal-100 to-teal-300 flex items-center justify-center text-3xl font-bold text-teal-700">
+                                <div className="w-full h-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-4xl font-black text-white">
                                     {initials}
                                 </div>
                             )}
@@ -182,18 +186,18 @@ export default function VetProfilePage() {
                                 {(photoHover || uploadingPhoto) && (
                                     <motion.div
                                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                                        className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center gap-1 rounded-full"
+                                        className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-2"
                                     >
                                         {uploadingPhoto ? (
-                                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                            <div className="w-6 h-6 border-3 border-teal-400 border-t-transparent rounded-full animate-spin" />
                                         ) : (
                                             <>
-                                                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 </svg>
-                                                <span className="text-white text-[10px] font-bold text-center leading-tight">
-                                                    {avatarUrl ? "Cambiar\nfoto" : "Añadir\nfoto"}
+                                                <span className="text-white text-[9px] font-black uppercase tracking-widest text-center leading-tight">
+                                                    {avatarUrl ? "Cambiar" : "Añadir"}
                                                 </span>
                                             </>
                                         )}
@@ -212,16 +216,13 @@ export default function VetProfilePage() {
                     </div>
 
                     <div>
-                        <h2 className="text-xl font-bold text-[var(--vy-neutral-900)]">
+                        <h2 className="text-2xl font-black text-[var(--vy-neutral-900)] uppercase tracking-tight">
                             {profile?.display_name || "Veterinario VetYa"}
                         </h2>
-                        <p className="text-[var(--vy-neutral-500)] text-sm mt-0.5">{user?.email}</p>
-                        <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-700 text-xs font-bold border border-teal-200">
-                            ⚕️ Veterinario
+                        <p className="text-[var(--vy-neutral-400)] text-[10px] font-black uppercase tracking-widest mt-1">{user?.email}</p>
+                        <div className="mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-xl bg-teal-500/10 text-teal-600 text-[10px] font-black uppercase tracking-widest border border-teal-500/20 shadow-sm">
+                            ⚕️ Veterinario Certificado
                         </div>
-                        <p className="text-[11px] text-[var(--vy-neutral-400)] mt-2">
-                            Pasa el cursor sobre la foto para cambiarla
-                        </p>
                     </div>
                 </div>
 
@@ -231,95 +232,144 @@ export default function VetProfilePage() {
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-10">
                     {/* Personal info */}
-                    <div>
-                        <h3 className="text-sm font-bold text-[var(--vy-neutral-700)] uppercase tracking-wide mb-3">Datos Personales</h3>
-                        <div className="grid sm:grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Nombre completo</label>
+                    <div className="space-y-6">
+                        <h3 className="text-[10px] font-black text-[var(--vy-neutral-400)] uppercase tracking-[0.2em] mb-4">Información Personal</h3>
+                        <div className="grid sm:grid-cols-2 gap-6">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Nombre Completo</label>
                                 <input
                                     type="text"
                                     value={formData.display_name}
                                     onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
                                     required
                                     placeholder="Dr. Nombre Apellido"
-                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                                    className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--vy-neutral-800)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Teléfono personal</label>
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Teléfono Personal</label>
                                 <input
                                     type="tel"
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                     placeholder="+51 999 999 999"
-                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                                    className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--vy-neutral-800)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                 />
                             </div>
                         </div>
                     </div>
 
                     {/* Clinic info */}
-                    <div>
-                        <h3 className="text-sm font-bold text-[var(--vy-neutral-700)] uppercase tracking-wide mb-3">Datos de Clínica</h3>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Nombre de la clínica</label>
+                    <div className="space-y-6">
+                        <h3 className="text-[10px] font-black text-[var(--vy-neutral-400)] uppercase tracking-[0.2em] mb-4">Información de la Clínica</h3>
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Nombre de la Institución</label>
                                 <input
                                     type="text"
                                     value={formData.clinic_name}
                                     onChange={(e) => setFormData({ ...formData, clinic_name: e.target.value })}
                                     placeholder="Clínica Veterinaria San Pedro"
-                                    className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                                    className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--vy-neutral-800)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                 />
                             </div>
-                            <div className="grid sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Dirección</label>
+                            <div className="grid sm:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Dirección Física</label>
                                     <input
                                         type="text"
                                         value={formData.clinic_address}
                                         onChange={(e) => setFormData({ ...formData, clinic_address: e.target.value })}
                                         placeholder="Av. Principal 123, Lima"
-                                        className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--vy-neutral-800)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                     />
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Teléfono de clínica</label>
+                                <div className="space-y-2">
+                                    <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Teléfono Institucional</label>
                                     <input
                                         type="tel"
                                         value={formData.clinic_phone}
                                         onChange={(e) => setFormData({ ...formData, clinic_phone: e.target.value })}
                                         placeholder="+51 1 234-5678"
-                                        className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                                        className="w-full px-5 py-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--background)] text-sm font-bold text-[var(--vy-neutral-800)] focus:border-teal-500 outline-none transition-all shadow-inner"
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Email (readonly) */}
-                    <div>
-                        <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Correo electrónico</label>
-                        <input
-                            type="email"
-                            value={user?.email || ""}
-                            disabled
-                            className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-200)] text-sm bg-[var(--vy-neutral-50)] text-[var(--vy-neutral-400)] cursor-not-allowed"
-                        />
-                        <p className="text-[11px] text-[var(--vy-neutral-400)] mt-1">El correo no se puede modificar</p>
+                    {/* Theme Customization */}
+                    <div className="space-y-8 pt-6">
+                        <h3 className="text-[10px] font-black text-[var(--vy-neutral-400)] uppercase tracking-[0.2em] mb-6">Personalización Visual</h3>
+                        
+                        <div className="grid md:grid-cols-2 gap-10">
+                            {/* Primary Color */}
+                            <div className="space-y-4">
+                                <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Color de Marca</label>
+                                <div className="flex flex-wrap gap-3">
+                                    {["celeste", "blue", "violet", "rose", "emerald", "amber", "orange"].map((opt) => (
+                                        <button
+                                            key={opt}
+                                            type="button"
+                                            onClick={() => setPrimaryColor(opt)}
+                                            className={`w-10 h-10 rounded-full transition-all duration-300 relative group
+                                                ${primaryColor === opt ? "ring-4 ring-offset-4 ring-offset-[var(--surface)] ring-teal-500 scale-110 shadow-lg" : "hover:scale-110 shadow-sm"}`}
+                                            style={{ backgroundColor: palettes[opt as keyof typeof palettes]?.[500] || "#ccc" }}
+                                        >
+                                            {primaryColor === opt && (
+                                                <span className="absolute inset-0 flex items-center justify-center text-white text-[10px] drop-shadow-md">
+                                                    ✨
+                                                </span>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Background Style */}
+                            <div className="space-y-4">
+                                <label className="block text-[10px] font-black text-[var(--vy-neutral-500)] uppercase tracking-widest px-1">Modo de Visualización</label>
+                                <div className="grid grid-cols-2 gap-3">
+                                    {[
+                                        { id: "white", label: "Claro", icon: "☀️", color: "#ffffff" },
+                                        { id: "gray", label: "Tenue", icon: "🌫️", color: "#f1f5f9" },
+                                        { id: "black", label: "Oscuro", icon: "🌙", color: "#0f172a" },
+                                        { id: "light-blue", label: "Cielo", icon: "☁️", color: "#f0f9ff" },
+                                    ].map((opt) => (
+                                        <button
+                                            key={opt.id}
+                                            type="button"
+                                            onClick={() => setSurfaceColor(opt.id)}
+                                            className={`flex items-center gap-3 px-4 py-3 rounded-2xl border-2 transition-all duration-300 text-left
+                                                ${surfaceColor === opt.id 
+                                                    ? "border-teal-500 bg-teal-500/5 shadow-md scale-[1.02]" 
+                                                    : "border-[var(--border)] bg-[var(--background)] hover:border-teal-500/30"}`}
+                                        >
+                                            <span className="text-xl">{opt.icon}</span>
+                                            <div className="flex flex-col">
+                                                <span className={`text-[9px] font-black uppercase tracking-widest ${surfaceColor === opt.id ? "text-teal-600" : "text-[var(--vy-neutral-600)]"}`}>
+                                                    {opt.label}
+                                                </span>
+                                                <div className="w-4 h-0.5 rounded-full mt-1 bg-current opacity-20" />
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="flex items-center justify-end pt-4 border-t border-[var(--vy-neutral-100)]">
-                        <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-end pt-10 border-t-2 border-[var(--border)]">
+                        <div className="flex items-center gap-6">
                             <AnimatePresence>
                                 {success && (
                                     <motion.span
                                         initial={{ opacity: 0, x: 10 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0 }}
-                                        className="text-sm text-green-600 font-medium"
+                                        className="text-[10px] font-black text-green-600 uppercase tracking-widest"
                                     >
                                         ✓ Cambios guardados
                                     </motion.span>
@@ -328,9 +378,9 @@ export default function VetProfilePage() {
                             <button
                                 type="submit"
                                 disabled={saving || !user}
-                                className="px-6 py-2.5 text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 rounded-xl transition-all shadow-md active:scale-95 disabled:opacity-60"
+                                className="px-10 py-4 text-[10px] font-black uppercase tracking-[0.2em] bg-teal-600 text-white hover:bg-teal-700 rounded-2xl transition-all shadow-xl shadow-teal-500/20 active:scale-95 disabled:opacity-60"
                             >
-                                {saving ? "Guardando..." : "Guardar Cambios"}
+                                {saving ? "Guardando..." : "Actualizar Perfil"}
                             </button>
                         </div>
                     </div>

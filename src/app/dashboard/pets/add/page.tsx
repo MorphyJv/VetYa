@@ -32,7 +32,7 @@ export default function AddPetPage() {
             <div className="flex items-center gap-4">
                 <Link
                     href="/dashboard/pets"
-                    className="w-10 h-10 rounded-xl bg-white border border-[var(--vy-neutral-200)] flex items-center justify-center text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-50)] transition-colors"
+                    className="w-10 h-10 rounded-xl bg-[var(--surface)] border border-[var(--vy-neutral-200)] flex items-center justify-center text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-50)] transition-colors"
                 >
                     ←
                 </Link>
@@ -42,7 +42,7 @@ export default function AddPetPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
+            <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] p-6 md:p-8 shadow-sm">
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {errorMsg && (
                         <div className="bg-[var(--vy-danger)]/10 text-[var(--vy-danger)] text-sm px-4 py-3 rounded-xl border border-[var(--vy-danger)]/20">
@@ -58,7 +58,7 @@ export default function AddPetPage() {
 
                         <div>
                             <label htmlFor="species" className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Especie <span className="text-[var(--vy-danger)]">*</span></label>
-                            <select id="species" name="species" required className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all bg-white">
+                            <select id="species" name="species" required className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all bg-[var(--surface)] text-[var(--foreground)]">
                                 <option value="">Selecciona...</option>
                                 <option value="dog">Perro 🐕</option>
                                 <option value="cat">Gato 🐈</option>
@@ -75,7 +75,7 @@ export default function AddPetPage() {
 
                         <div>
                             <label htmlFor="sex" className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Sexo</label>
-                            <select id="sex" name="sex" className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all bg-white">
+                            <select id="sex" name="sex" className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all bg-[var(--surface)] text-[var(--foreground)]">
                                 <option value="">Desconocido</option>
                                 <option value="male">Macho</option>
                                 <option value="female">Hembra</option>

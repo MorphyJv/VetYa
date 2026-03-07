@@ -58,42 +58,47 @@ export const palettes: Record<string, ColorPalette> = {
     },
 };
 
-export const surfacePalettes: Record<string, { bg: string; fg: string; surface: string; border: string; neutral50: string; neutral100: string; neutral200: string }> = {
+export const surfacePalettes: Record<string, { bg: string; fg: string; surface: string; border: string; neutrals: Record<number, string> }> = {
     white: {
         bg: "#ffffff",
         fg: "#0f172a",
         surface: "#ffffff",
         border: "#f1f5f9",
-        neutral50: "#ffffff",
-        neutral100: "#f8fafc",
-        neutral200: "#f1f5f9"
+        neutrals: {
+            50: "#ffffff", 100: "#f8fafc", 200: "#f1f5f9", 300: "#e2e8f0", 400: "#cbd5e1",
+            500: "#94a3b8", 600: "#64748b", 700: "#475569", 800: "#334155", 900: "#1e293b"
+        }
     },
     gray: {
         bg: "#e2e8f0",
         fg: "#1e293b",
         surface: "#f1f5f9",
         border: "#cbd5e1",
-        neutral50: "#f8fafc",
-        neutral100: "#f1f5f9",
-        neutral200: "#cbd5e1"
+        neutrals: {
+            50: "#f8fafc", 100: "#f1f5f9", 200: "#e2e8f0", 300: "#cbd5e1", 400: "#94a3b8",
+            500: "#64748b", 600: "#475569", 700: "#334155", 800: "#1e293b", 900: "#020617"
+        }
     },
     black: {
         bg: "#020617",
         fg: "#f8fafc",
         surface: "#0f172a",
-        border: "#1e293b",
-        neutral50: "#0f172a",
-        neutral100: "#1e293b",
-        neutral200: "#334155"
+        border: "#334155", // Increased contrast from #1e293b
+        neutrals: {
+            // THE BIG FLIP: 900 is now light, 50 is dark
+            50: "#020617", 100: "#0f172a", 200: "#1e293b", 300: "#334155", 400: "#475569",
+            500: "#94a3b8", 600: "#cbd5e1", 700: "#e2e8f0", 800: "#f1f5f9", 900: "#ffffff"
+        }
     },
     "light-blue": {
         bg: "#e0f2fe",
         fg: "#0c4a6e",
         surface: "#f0f9ff",
         border: "#bae6fd",
-        neutral50: "#f0f9ff",
-        neutral100: "#e0f2fe",
-        neutral200: "#bae6fd"
+        neutrals: {
+            50: "#f0f9ff", 100: "#e0f2fe", 200: "#bae6fd", 300: "#7dd3fc", 400: "#38bdf8",
+            500: "#0ea5e9", 600: "#0284c7", 700: "#0369a1", 800: "#075985", 900: "#0c4a6e"
+        }
     },
 };
 
@@ -127,10 +132,20 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             root.style.setProperty("--foreground", s.fg);
             root.style.setProperty("--surface", s.surface);
             root.style.setProperty("--border", s.border);
-            root.style.setProperty("--vy-neutral-50", s.neutral50);
-            root.style.setProperty("--vy-neutral-100", s.neutral100);
-            root.style.setProperty("--vy-neutral-200", s.neutral200);
+            
+            // Set all 10 neutral tokens dynamically
+            Object.entries(s.neutrals).forEach(([key, value]) => {
+                root.style.setProperty(`--vy-neutral-${key}`, value);
+            });
+            
             localStorage.setItem("vy-surface-theme", surfaceColor);
+
+            // Enable global Tailwind dark mode class
+            if (surfaceColor === "black" || surfaceColor === "gray") {
+                root.classList.add("dark");
+            } else {
+                root.classList.remove("dark");
+            }
         }
     }, [primaryColor, surfaceColor]);
 

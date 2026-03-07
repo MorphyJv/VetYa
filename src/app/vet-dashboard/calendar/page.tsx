@@ -22,7 +22,7 @@ export default async function VetCalendarPage() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
+            <div className="overflow-hidden">
                 <VetCalendarClient
                     initialEvents={eventsRes.data || []}
                     pets={petsRes.data || []}
