@@ -9,6 +9,27 @@ export default function RegisterPage() {
     const [role, setRole] = useState<"owner" | "vet">("owner");
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [password, setPassword] = useState("");
+
+    const getStrength = (pass: string) => {
+        if (!pass) return -1;
+        let score = 0;
+        if (pass.length > 7) score++;
+        if (pass.length > 11) score++;
+        if (/[A-Z]/.test(pass) && /[a-z]/.test(pass)) score++;
+        if (/[0-9]/.test(pass)) score++;
+        if (/[^A-Za-z0-9]/.test(pass)) score++;
+        return Math.min(4, Math.floor(score / 1.25)); // Normalize to 0-4
+    };
+
+    const strength = getStrength(password);
+    const strengthConfig = [
+        { label: "Muy Débil 🚩", color: "bg-red-500", width: "25%" },
+        { label: "Débil ⚠️", color: "bg-orange-500", width: "50%" },
+        { label: "Segura 🛡️", color: "bg-yellow-500", width: "75%" },
+        { label: "Muy Segura 🔒", color: "bg-emerald-500", width: "100%" },
+        { label: "Inviolable 👑", color: "bg-[var(--vy-primary-500)]", width: "100%" },
+    ];
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -120,8 +141,30 @@ export default function RegisterPage() {
                                 placeholder="Mínimo 8 caracteres"
                                 required
                                 minLength={8}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-[var(--vy-neutral-900)] text-sm placeholder:text-[var(--vy-neutral-400)] focus:ring-2 focus:ring-[var(--vy-primary-500)] focus:border-transparent outline-none transition-all"
                             />
+
+                            {password && (
+                                <div className="mt-3 space-y-2">
+                                    <div className="flex justify-between items-center px-1">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--vy-neutral-500)]">
+                                            Seguridad:
+                                        </span>
+                                        <span className={`text-[10px] font-black uppercase tracking-widest ${strengthConfig[strength].color.replace('bg-', 'text-')}`}>
+                                            {strengthConfig[strength].label}
+                                        </span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-[var(--vy-neutral-100)] rounded-full overflow-hidden border border-black/5">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: strengthConfig[strength].width }}
+                                            className={`h-full ${strengthConfig[strength].color} transition-colors duration-500 shadow-[0_0_10px_rgba(0,0,0,0.1)]`}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <motion.button
