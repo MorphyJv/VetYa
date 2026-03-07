@@ -24,6 +24,12 @@ export const metadata: Metadata = {
     title: 'VetYa - Tu veterinario 24/7',
     description: 'Cuidamos a los que más quieres. Gestiona la salud de tu mascota fácilmente.',
   },
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'VetYa',
+  },
 };
 
 import SplashScreen from "@/components/SplashScreen";
