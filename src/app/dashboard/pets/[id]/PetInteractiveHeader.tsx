@@ -3,8 +3,32 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function PetInteractiveHeader({ pet, initialVitality, avatarFallback }: { pet: any, initialVitality: any, avatarFallback: string }) {
-    const [vitalityScore, setVitalityScore] = useState(initialVitality?.score || 50);
+interface Pet {
+    id: string;
+    name: string;
+    species: string;
+    breed?: string;
+    photo_url?: string;
+    sex?: string;
+    weight_kg?: number;
+    birth_date?: string;
+}
+
+interface Vitality {
+    score: number;
+    suggestions?: string[];
+}
+
+export default function PetInteractiveHeader({ 
+    pet, 
+    initialVitality, 
+    avatarFallback 
+}: { 
+    pet: Pet, 
+    initialVitality: Vitality | null, 
+    avatarFallback: string 
+}) {
+    const [vitalityScore, setVitalityScore] = useState<number>(initialVitality?.score || 50);
     const [showHappy, setShowHappy] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const [faceProps, setFaceProps] = useState({ face: ":D", rotate: 0, scale: 1 });
@@ -22,7 +46,7 @@ export default function PetInteractiveHeader({ pet, initialVitality, avatarFallb
     };
 
     const handleFeed = () => {
-        setVitalityScore(prev => Math.min(100, prev + 20));
+        setVitalityScore((prev: number) => Math.min(100, prev + 20));
         setShowHappy(true);
         setFaceProps({ face: ":D", rotate: 0, scale: 1 });
         
@@ -122,7 +146,7 @@ export default function PetInteractiveHeader({ pet, initialVitality, avatarFallb
                                     <h5 className="text-xs font-bold text-[var(--vy-primary-800)] uppercase mb-2 flex items-center gap-1.5">
                                         <span>🤖</span> Sugerencias de Salud
                                     </h5>
-                                    {initialVitality?.suggestions?.length > 0 ? (
+                                    {initialVitality?.suggestions && initialVitality.suggestions.length > 0 ? (
                                         <ul className="space-y-1.5">
                                             {initialVitality.suggestions.map((s: string, i: number) => (
                                                 <li key={i} className="text-xs text-[var(--vy-primary-700)] flex items-start gap-2">

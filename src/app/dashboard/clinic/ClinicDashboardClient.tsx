@@ -4,7 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ClinicDashboardClient({ pets }: { pets: any[] }) {
+interface Pet {
+    id: string;
+    name: string;
+    species: string;
+    breed?: string;
+    photo_url?: string;
+    sex?: string;
+    weight_kg?: number;
+    birth_date?: string;
+}
+
+export default function ClinicDashboardClient({ pets }: { pets: Pet[] }) {
     const [isAppointmentModalOpen, setAppointmentModalOpen] = useState(false);
 
     const clinicContact = "+59160012345";
