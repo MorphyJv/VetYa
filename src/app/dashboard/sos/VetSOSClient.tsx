@@ -29,7 +29,7 @@ export default function VetSOSClient({ initialEmergencies }: { initialEmergencie
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="bg-white rounded-[50px] p-20 border-4 border-red-50 shadow-2xl max-w-2xl"
+                    className="bg-[var(--surface)] rounded-[50px] p-20 border-4 border-[var(--vy-danger)]/5 shadow-2xl max-w-2xl"
                 >
                     <div className="text-8xl mb-8 animate-bounce">🩺</div>
                     <h1 className="text-5xl font-black text-[var(--vy-neutral-900)] tracking-tighter uppercase mb-4 italic">Central Vet</h1>
@@ -52,7 +52,7 @@ export default function VetSOSClient({ initialEmergencies }: { initialEmergencie
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-[40px] p-10 border-4 border-red-100 shadow-2xl flex flex-col md:flex-row items-center gap-8"
+                className="bg-[var(--surface)] rounded-[40px] p-10 border-4 border-[var(--vy-danger)]/10 shadow-2xl flex flex-col md:flex-row items-center gap-8"
             >
                 <div className="w-24 h-24 rounded-full bg-red-600 flex items-center justify-center text-5xl shadow-xl shadow-red-200 animate-bounce">
                     🚨
@@ -80,7 +80,7 @@ export default function VetSOSClient({ initialEmergencies }: { initialEmergencie
                             <button
                                 key={req.id}
                                 onClick={() => router.push(`/dashboard/sos/${req.id}`)}
-                                className="w-full bg-white p-6 rounded-[32px] border-2 border-green-100 shadow-md flex items-center gap-5 hover:scale-[1.02] transition-transform text-left"
+                                className="w-full bg-[var(--surface)] p-6 rounded-[32px] border-2 border-[var(--vy-success)]/10 shadow-md flex items-center gap-5 hover:scale-[1.02] transition-transform text-left"
                             >
                                 <div className="w-14 h-14 rounded-2xl bg-[var(--vy-neutral-50)] flex items-center justify-center text-2xl overflow-hidden shadow-inner">
                                     {req.pet.photo_url ? <img src={req.pet.photo_url} alt="" className="w-full h-full object-cover" /> : "🐾"}
@@ -125,7 +125,7 @@ export default function VetSOSClient({ initialEmergencies }: { initialEmergencie
                                 className="bg-red-50 p-6 rounded-[32px] border-2 border-red-200 shadow-xl flex flex-col gap-4"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-2xl bg-white border-2 border-red-200 flex items-center justify-center text-2xl overflow-hidden font-black">
+                                    <div className="w-12 h-12 rounded-2xl bg-[var(--surface)] border-2 border-[var(--vy-danger)]/20 flex items-center justify-center text-2xl overflow-hidden font-black">
                                         {req.pet.photo_url ? <img src={req.pet.photo_url} alt="" className="w-full h-full object-cover" /> : "🐾"}
                                     </div>
                                     <div>

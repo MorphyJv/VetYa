@@ -21,7 +21,7 @@ export default async function OwnerDiaryPage({ params }: { params: Promise<{ dat
     return (
         <div className="min-h-screen bg-[var(--vy-neutral-50)]">
             {/* Top bar */}
-            <div className="bg-white border-b border-[var(--vy-neutral-200)] px-6 py-4 flex items-center gap-4 sticky top-0 z-10">
+            <div className="bg-[var(--surface)] border-b border-[var(--vy-neutral-200)] px-6 py-4 flex items-center gap-4 sticky top-0 z-10">
                 <Link
                     href="/dashboard/calendar"
                     className="w-9 h-9 flex items-center justify-center rounded-xl bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-200)] transition-colors"

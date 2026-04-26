@@ -12,6 +12,7 @@ const navItems = [
     { href: "/dashboard", label: "Inicio", icon: "🏠" },
     { href: "/dashboard/pets", label: "Mascotas", icon: "🐾" },
     { href: "/dashboard/calendar", label: "Calendario", icon: "📅" },
+    { href: "/dashboard/clinic", label: "Clínica Vet", icon: "🏥" },
     { href: "/dashboard/explore", label: "Explorar", icon: "📍" },
     { href: "/dashboard/sos", label: "SOS", icon: "🚨" },
     { href: "/dashboard/ai", label: "Asistente IA", icon: "🤖" },
@@ -40,6 +41,8 @@ export default function DashboardLayout({
     const confirmSignOut = async () => {
         const supabase = createClient();
         await supabase.auth.signOut();
+        // Clear active role cookie
+        document.cookie = "vetya-active-role=; Max-Age=0; path=/";
         setIsLogoutModalOpen(false);
         router.push("/");
     };
@@ -50,7 +53,7 @@ export default function DashboardLayout({
             <aside className="hidden lg:flex flex-col w-64 bg-[var(--surface)] border-r border-[var(--border)] p-4 fixed inset-y-0 left-0 z-30 overflow-visible">
                 {/* Logo */}
                 <Link href="/dashboard" className="flex items-center gap-2 px-3 py-2 mb-6 group">
-                    <div className="bg-white rounded-[28%] p-2 shadow-sm overflow-hidden flex items-center justify-center h-16 w-16 transition-transform group-hover:scale-105 active:scale-95">
+                    <div className="bg-[var(--surface)] border border-[var(--vy-neutral-200)] rounded-[28%] p-2 shadow-sm overflow-hidden flex items-center justify-center h-16 w-16 transition-transform group-hover:scale-105 active:scale-95">
                         <Logo size={48} className="w-full h-full" />
                     </div>
                 </Link>
@@ -127,7 +130,7 @@ export default function DashboardLayout({
                     </svg>
                 </button>
 
-                <div className="bg-white rounded-[28%] p-1.5 shadow-sm overflow-hidden flex items-center justify-center h-12 w-12">
+                <div className="bg-[var(--surface)] border border-[var(--vy-neutral-200)] rounded-[28%] p-1.5 shadow-sm overflow-hidden flex items-center justify-center h-12 w-12">
                     <Logo size={40} className="w-full h-full" />
                 </div>
 
@@ -155,7 +158,7 @@ export default function DashboardLayout({
                             className="lg:hidden fixed inset-y-0 left-0 w-72 bg-[var(--surface)] z-50 p-4 shadow-xl overflow-visible"
                         >
                             <div className="flex items-center gap-2 px-3 py-2 mb-6">
-                                <div className="bg-white rounded-[28%] p-2 shadow-md overflow-hidden flex items-center justify-center h-16 w-16">
+                                <div className="bg-[var(--surface)] border border-[var(--vy-neutral-200)] rounded-[28%] p-2 shadow-md overflow-hidden flex items-center justify-center h-16 w-16">
                                     <Logo size={48} className="w-full h-full" />
                                 </div>
                             </div>
@@ -199,7 +202,7 @@ export default function DashboardLayout({
             </AnimatePresence>
 
             {/* ── Mobile Bottom Nav ── */}
-            <nav className="lg:hidden fixed bottom-0 left-0 right-0 h-16 bg-[var(--surface)]/90 backdrop-blur-xl border-t border-[var(--border)] flex items-center justify-around px-2 z-40">
+            <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[var(--surface)]/95 backdrop-blur-xl border-t border-[var(--border)] flex items-center justify-around px-1 z-40" style={{ paddingBottom: 'env(safe-area-inset-bottom)', minHeight: '60px' }}>
                 {navItems.map((item) => {
                     const isActive =
                         item.href === "/dashboard"
@@ -209,7 +212,7 @@ export default function DashboardLayout({
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative flex flex-col items-center gap-0.5 py-1 px-3 rounded-xl transition-all text-xs font-medium
+                            className={`relative flex flex-col items-center gap-0.5 py-2 px-2 rounded-xl transition-all min-w-0 flex-1
                 ${mounted && isActive
                                     ? "text-[var(--vy-primary-600)]"
                                     : "text-[var(--vy-neutral-400)]"
@@ -222,15 +225,15 @@ export default function DashboardLayout({
                                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                 />
                             )}
-                            <span className="text-xl">{item.icon}</span>
-                            <span>{item.label}</span>
+                            <span className="text-xl leading-none">{item.icon}</span>
+                            <span className="text-[9px] font-semibold leading-tight truncate w-full text-center">{item.label}</span>
                         </Link>
                     );
                 })}
             </nav>
 
             {/* ── Content ── */}
-            <main className="flex-1 lg:ml-64 pt-14 pb-20 lg:pt-0 lg:pb-0 overflow-y-auto min-h-screen">
+            <main className="flex-1 lg:ml-64 pt-14 pb-20 lg:pt-0 lg:pb-0 overflow-y-auto overflow-x-hidden min-h-screen">
                 {children}
             </main>
 

@@ -37,6 +37,8 @@ export default function VetDashboardLayout({
     const confirmSignOut = async () => {
         const supabase = createClient();
         await supabase.auth.signOut();
+        // Clear active role cookie
+        document.cookie = "vetya-active-role=; Max-Age=0; path=/";
         setIsLogoutModalOpen(false);
         router.push("/");
     };

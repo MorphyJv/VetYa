@@ -26,9 +26,9 @@ export async function getCalendarEvents(monthStart: string, monthEnd: string) {
 
 export async function getUpcomingEvents(limit: number = 5) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado", data: null };
+    if (authError || !user) return { error: "No autorizado", data: null };
 
     const { data, error } = await supabase
         .from("calendar_events")
@@ -36,7 +36,7 @@ export async function getUpcomingEvents(limit: number = 5) {
       *,
       pet:pet_id (id, name, species)
     `)
-        .eq("owner_id", session.user.id)
+        .eq("owner_id", user.id)
         .eq("completed", false)
         .gte("event_datetime", new Date().toISOString()) // Only future events
         .order("event_datetime", { ascending: true })
@@ -48,9 +48,9 @@ export async function getUpcomingEvents(limit: number = 5) {
 
 export async function addCalendarEvent(formData: FormData) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado" };
+    if (authError || !user) return { error: "No autorizado" };
 
     const pet_id = formData.get("pet_id") as string;
     const title = formData.get("title") as string;
@@ -61,7 +61,7 @@ export async function addCalendarEvent(formData: FormData) {
     const { error } = await supabase
         .from("calendar_events")
         .insert({
-            owner_id: session.user.id,
+            owner_id: user.id,
             pet_id,
             title,
             description,

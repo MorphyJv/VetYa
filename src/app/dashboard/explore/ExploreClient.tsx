@@ -69,7 +69,7 @@ export default function ExploreClient({ initialPlaces, currentType }: { initialP
                                 className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold transition-all shadow-sm
                                     ${currentType === cat.id
                                         ? "bg-[var(--vy-primary-500)] text-white scale-105 shadow-md"
-                                        : "bg-white text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-100)] border border-[var(--vy-neutral-200)]"
+                                        : "bg-[var(--surface)] text-[var(--vy-neutral-600)] hover:bg-[var(--vy-neutral-100)] border border-[var(--vy-neutral-200)]"
                                     }`}
                             >
                                 <span>{cat.icon}</span>
@@ -78,7 +78,7 @@ export default function ExploreClient({ initialPlaces, currentType }: { initialP
                         ))}
                     </div>
 
-                    <div className="flex bg-white p-1 rounded-2xl border border-[var(--vy-neutral-200)] self-start md:self-auto">
+                    <div className="flex bg-[var(--surface)] p-1 rounded-2xl border border-[var(--vy-neutral-200)] self-start md:self-auto">
                         <button
                             onClick={() => setViewMode("grid")}
                             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${viewMode === "grid" ? "bg-[var(--vy-primary-50)] text-[var(--vy-primary-700)] shadow-sm" : "text-[var(--vy-neutral-500)]"}`}
@@ -132,7 +132,7 @@ export default function ExploreClient({ initialPlaces, currentType }: { initialP
                         className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
                     >
                         {initialPlaces.length === 0 ? (
-                            <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-dashed border-[var(--vy-neutral-200)]">
+                            <div className="col-span-full py-20 text-center bg-[var(--surface)] rounded-3xl border border-dashed border-[var(--vy-neutral-200)]">
                                 <div className="text-5xl mb-4">🔍</div>
                                 <h3 className="text-xl font-bold text-[var(--vy-neutral-800)]">No se encontraron lugares</h3>
                                 <p className="text-[var(--vy-neutral-500)] mt-2">Prueba seleccionando otra categoría.</p>
@@ -144,7 +144,7 @@ export default function ExploreClient({ initialPlaces, currentType }: { initialP
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: idx * 0.05 }}
-                                    className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] overflow-hidden hover:shadow-xl transition-all group flex flex-col"
+                                    className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] overflow-hidden hover:shadow-xl transition-all group flex flex-col"
                                 >
                                     <div className="aspect-[4/3] relative overflow-hidden bg-[var(--vy-neutral-100)]">
                                         {place.image_url ? (
@@ -158,7 +158,7 @@ export default function ExploreClient({ initialPlaces, currentType }: { initialP
                                             href={getPlaceNavigationUrl(place)}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 hover:bg-white transition-colors"
+                                            className="absolute top-4 right-4 bg-[var(--surface)]/90 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 hover:bg-[var(--surface)] transition-colors"
                                         >
                                             📍 Ir al mapa
                                         </a>
@@ -205,7 +205,7 @@ export default function ExploreClient({ initialPlaces, currentType }: { initialP
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
+                            className="bg-[var(--surface)] rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl"
                         >
                             <div className="p-6 border-b flex justify-between items-center">
                                 <div>

@@ -5,15 +5,15 @@ import { revalidatePath } from "next/cache";
 
 export async function getPets() {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado", data: null };
+    if (authError || !user) return { error: "No autorizado", data: null };
 
     const { data, error } = await supabase
         .from("pets")
         .select("*")
         // RLS already filters by owner_id, but good practice to be explicit
-        .eq("owner_id", session.user.id)
+        .eq("owner_id", user.id)
         .order("created_at", { ascending: false });
 
     if (error) return { error: error.message, data: null };
@@ -22,10 +22,15 @@ export async function getPets() {
 
 export async function getPetById(id: string) {
     const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) return { error: "No autorizado", data: null };
+
     const { data, error } = await supabase
         .from("pets")
         .select("*")
         .eq("id", id)
+        .eq("owner_id", user.id)
         .single();
 
     if (error) return { error: error.message, data: null };
@@ -34,9 +39,9 @@ export async function getPetById(id: string) {
 
 export async function addPet(formData: FormData) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado" };
+    if (authError || !user) return { error: "No autorizado" };
 
     const name = formData.get("name") as string;
     const species = formData.get("species") as string;
@@ -48,7 +53,7 @@ export async function addPet(formData: FormData) {
     const { error } = await supabase
         .from("pets")
         .insert({
-            owner_id: session.user.id,
+            owner_id: user.id,
             name,
             species,
             breed,

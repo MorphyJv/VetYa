@@ -32,15 +32,15 @@ export async function getPlaces(type?: string) {
 
 export async function addReview(placeId: string, rating: number, comment: string) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "Debes iniciar sesión para dejar una reseña." };
+    if (authError || !user) return { error: "No autorizado" };
 
     const { error } = await supabase
         .from("place_reviews")
         .insert({
             place_id: placeId,
-            profile_id: session.user.id,
+            profile_id: user.id,
             rating,
             comment
         });

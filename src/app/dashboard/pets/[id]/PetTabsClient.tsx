@@ -39,7 +39,7 @@ export default function PetTabsClient({
     };
 
     return (
-        <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
+        <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
             {/* Tabs Header */}
             <div className="flex border-b border-[var(--vy-neutral-200)] bg-[var(--vy-neutral-50)]">
                 <button
@@ -115,7 +115,7 @@ export default function PetTabsClient({
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Tipo de Registro</label>
-                                            <select name="record_type" required className="w-full px-4 py-2.5 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm outline-none focus:ring-2 focus:ring-[var(--vy-primary-500)]">
+                                            <select name="record_type" required className="w-full px-4 py-2.5 rounded-xl border border-[var(--vy-neutral-300)] bg-[var(--surface)] text-sm outline-none focus:ring-2 focus:ring-[var(--vy-primary-500)]">
                                                 <option value="routine">Rutina</option>
                                                 <option value="emergency">Emergencia</option>
                                                 <option value="followup">Seguimiento</option>

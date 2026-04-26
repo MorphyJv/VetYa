@@ -31,7 +31,7 @@ export default function EditPetModal({ pet, onClose }: { pet: any, onClose: () =
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl w-full max-w-4xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh]">
+            <div className="bg-[var(--surface)] rounded-3xl w-full max-w-4xl shadow-xl overflow-hidden animate-in fade-in zoom-in duration-200 flex flex-col max-h-[90vh]">
                 <div className="px-6 py-4 border-b border-[var(--vy-neutral-100)] flex items-center justify-between shrink-0">
                     <h2 className="text-xl font-bold text-[var(--vy-neutral-900)]">Editar Perfil de {pet.name}</h2>
                     <button
@@ -151,7 +151,7 @@ export default function EditPetModal({ pet, onClose }: { pet: any, onClose: () =
                                         <img src={previewUrl} alt="Vista previa de mascota" className="absolute inset-0 w-full h-full object-cover" />
                                     ) : (
                                         <div className="flex flex-col items-center">
-                                            <div className="mb-4 w-20 h-20 bg-white rounded-full shadow-sm flex items-center justify-center text-4xl group-hover:scale-110 transition-transform text-[var(--vy-primary-500)]">
+                                            <div className="mb-4 w-20 h-20 bg-[var(--surface)] rounded-full shadow-sm flex items-center justify-center text-4xl group-hover:scale-110 transition-transform text-[var(--vy-primary-500)]">
                                                 📷
                                             </div>
 
@@ -160,7 +160,7 @@ export default function EditPetModal({ pet, onClose }: { pet: any, onClose: () =
                                                 Haz clic o arrastra una imagen aquí. (Formatos JPG o PNG, máximo 5MB)
                                             </p>
 
-                                            <div className="mt-6 px-4 py-2 bg-white rounded-lg text-sm font-medium text-[var(--vy-primary-600)] shadow-sm border border-[var(--vy-neutral-200)]">
+                                            <div className="mt-6 px-4 py-2 bg-[var(--surface)] rounded-lg text-sm font-medium text-[var(--vy-primary-600)] shadow-sm border border-[var(--vy-neutral-200)]">
                                                 Explorar archivos
                                             </div>
                                         </div>
@@ -178,7 +178,7 @@ export default function EditPetModal({ pet, onClose }: { pet: any, onClose: () =
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-2.5 text-sm font-semibold rounded-xl text-[var(--vy-neutral-700)] bg-white border border-[var(--vy-neutral-200)] hover:bg-[var(--vy-neutral-100)] transition-colors"
+                            className="px-6 py-2.5 text-sm font-semibold rounded-xl text-[var(--vy-neutral-700)] bg-[var(--surface)] border border-[var(--vy-neutral-200)] hover:bg-[var(--vy-neutral-100)] transition-colors"
                         >
                             Cancelar
                         </button>

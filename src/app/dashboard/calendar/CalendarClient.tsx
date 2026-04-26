@@ -22,6 +22,10 @@ export default function CalendarClient({
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
     // Adjust to make Monday=0, Sunday=6
     const startingDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+    
+    // Calculate empty cells needed at the end of the grid to complete the row
+    const totalCells = startingDay + daysInMonth;
+    const trailingCells = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
 
     const handlePrevMonth = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
@@ -95,7 +99,7 @@ export default function CalendarClient({
                     ))}
 
                     {Array.from({ length: startingDay }).map((_, i) => (
-                        <div key={`empty-${i}`} className="bg-white min-h-24 p-2 opacity-30" />
+                        <div key={`empty-${i}`} className="bg-[var(--surface)] min-h-24 p-2 opacity-30" />
                     ))}
 
                     {Array.from({ length: daysInMonth }).map((_, i) => {
@@ -109,7 +113,7 @@ export default function CalendarClient({
                             <button
                                 key={day}
                                 onClick={() => setSelectedDate(thisDate)}
-                                className={`bg-white min-h-24 p-2 relative flex flex-col items-start hover:bg-[var(--vy-primary-50)] transition-colors outline-none
+                                className={`bg-[var(--surface)] min-h-24 p-2 relative flex flex-col items-start hover:bg-[var(--vy-primary-50)] transition-colors outline-none
                   ${isSelected ? "ring-2 ring-inset ring-[var(--vy-primary-500)] z-10" : ""}
                 `}
                             >
@@ -135,6 +139,10 @@ export default function CalendarClient({
                             </button>
                         );
                     })}
+
+                    {Array.from({ length: trailingCells }).map((_, i) => (
+                        <div key={`empty-end-${i}`} className="bg-[var(--surface)] min-h-24 p-2" />
+                    ))}
                 </div>
             </div>
 
@@ -155,7 +163,7 @@ export default function CalendarClient({
                         </div>
                     ) : (
                         selectedDateEvents.map(ev => (
-                            <div key={ev.id} className={`p-4 bg-white rounded-2xl border ${ev.completed ? "border-[var(--vy-success)]/20 shadow-none opacity-60" : "border-[var(--vy-neutral-200)] shadow-sm"} transition-all relative overflow-hidden`}>
+                            <div key={ev.id} className={`p-4 bg-[var(--surface)] rounded-2xl border ${ev.completed ? "border-[var(--vy-success)]/20 shadow-none opacity-60" : "border-[var(--vy-neutral-200)] shadow-sm"} transition-all relative overflow-hidden`}>
                                 <div className="flex justify-between items-start gap-4">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1.5">
@@ -185,7 +193,7 @@ export default function CalendarClient({
 
                 <Link
                     href={`/dashboard/calendar/notas/${selectedDate.toISOString().split("T")[0]}`}
-                    className="w-full flex items-center gap-2 py-2.5 px-4 rounded-xl border border-[var(--vy-neutral-200)] bg-white text-sm font-semibold text-[var(--vy-neutral-700)] hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700 transition-all mb-3"
+                    className="w-full flex items-center gap-2 py-2.5 px-4 rounded-xl border border-[var(--vy-neutral-200)] bg-[var(--surface)] text-sm font-semibold text-[var(--vy-neutral-700)] hover:bg-[var(--vy-primary-50)] hover:border-[var(--vy-primary-300)] hover:text-[var(--vy-primary-700)] transition-all mb-3"
                 >
                     <span className="text-base">📓</span>
                     Notas del día
@@ -206,7 +214,7 @@ export default function CalendarClient({
                 {showModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowModal(false)} className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-white p-6 rounded-3xl shadow-xl w-full max-w-md relative z-10 overflow-hidden">
+                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-[var(--surface)] p-6 rounded-3xl shadow-xl w-full max-w-md relative z-10 overflow-hidden">
                             <h3 className="text-xl font-bold text-[var(--vy-neutral-900)] mb-6">Nuevo Evento</h3>
 
                             <form onSubmit={handleAddEvent} className="space-y-4">
@@ -220,7 +228,7 @@ export default function CalendarClient({
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Mascota <span className="text-red-500">*</span></label>
-                                        <select name="pet_id" required className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] outline-none">
+                                        <select name="pet_id" required className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-[var(--surface)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] outline-none">
                                             <option value="">Selecciona...</option>
                                             {pets.map(pet => (
                                                 <option key={pet.id} value={pet.id}>{pet.name}</option>
@@ -229,7 +237,7 @@ export default function CalendarClient({
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-[var(--vy-neutral-700)] mb-1.5">Tipo <span className="text-red-500">*</span></label>
-                                        <select name="event_type" required className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-white text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] outline-none">
+                                        <select name="event_type" required className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-[var(--surface)] text-sm focus:ring-2 focus:ring-[var(--vy-primary-500)] outline-none">
                                             <option value="vaccine">Vacuna</option>
                                             <option value="deworming">Desparasitación</option>
                                             <option value="checkup">Chequeo</option>

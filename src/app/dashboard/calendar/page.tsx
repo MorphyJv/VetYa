@@ -22,7 +22,7 @@ export default async function CalendarPage() {
             title="Calendario"
             subtitle="Visualiza y programa vacunas, desparasitaciones y citas veterinarias."
         >
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
+            <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
                 <CalendarClient
                     initialEvents={eventsRes.data || []}
                     pets={petsRes.data || []}

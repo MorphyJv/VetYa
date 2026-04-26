@@ -2,6 +2,14 @@ import { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/providers/ThemeContext';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover',
+};
+
 export const metadata: Metadata = {
   title: {
     template: '%s | VetYa',
@@ -24,7 +32,6 @@ export const metadata: Metadata = {
     title: 'VetYa - Tu veterinario 24/7',
     description: 'Cuidamos a los que más quieres. Gestiona la salud de tu mascota fácilmente.',
   },
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',

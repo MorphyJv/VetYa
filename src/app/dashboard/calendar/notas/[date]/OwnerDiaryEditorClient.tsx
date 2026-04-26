@@ -84,7 +84,7 @@ export default function OwnerDiaryEditorClient({
                 </button>
             </div>
 
-            <div className="bg-white rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
+            <div className="bg-[var(--surface)] rounded-3xl border border-[var(--vy-neutral-200)] shadow-sm overflow-hidden">
                 <div className="h-1 bg-gradient-to-r from-[var(--vy-primary-400)] via-[var(--vy-primary-500)] to-[var(--vy-primary-600)]" />
                 <textarea
                     value={content}

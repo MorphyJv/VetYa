@@ -1,13 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { streamText, CoreMessage } from 'ai';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { google } from '@ai-sdk/google';
 
 export const maxDuration = 30;
 export const dynamic = 'force-dynamic';
-
-const google = createGoogleGenerativeAI({
-    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
-});
 
 const SYSTEM_PROMPT_BASE = `
 Eres "VetYa", un asistente virtual amigable, empático y profesional enfocado en la salud y bienestar de mascotas.

@@ -5,9 +5,9 @@ import { revalidatePath } from "next/cache";
 
 export async function getConversations() {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado", data: null };
+    if (authError || !user) return { error: "No autorizado", data: null };
 
     const { data, error } = await supabase
         .from("ai_conversations")
@@ -15,7 +15,7 @@ export async function getConversations() {
       *,
       pet:pet_id (id, name, species)
     `)
-        .eq("owner_id", session.user.id)
+        .eq("owner_id", user.id)
         .order("updated_at", { ascending: false });
 
     if (error) return { error: error.message, data: null };
@@ -24,9 +24,9 @@ export async function getConversations() {
 
 export async function createConversation(petId: string | null = null, firstMessage: string) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado", data: null };
+    if (authError || !user) return { error: "No autorizado", data: null };
 
     // Set a default title based on the first message
     const title = firstMessage.length > 50 ? firstMessage.substring(0, 47) + "..." : firstMessage;
@@ -34,7 +34,7 @@ export async function createConversation(petId: string | null = null, firstMessa
     const { data, error } = await supabase
         .from("ai_conversations")
         .insert({
-            owner_id: session.user.id,
+            owner_id: user.id,
             pet_id: petId,
             title
         })
@@ -94,5 +94,38 @@ export async function deleteConversation(conversationId: string) {
     if (error) return { error: error.message };
 
     revalidatePath("/dashboard/ai");
+    return { error: null };
+}
+
+export async function renameConversation(conversationId: string, newTitle: string) {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from("ai_conversations")
+        .update({ title: newTitle, updated_at: new Date().toISOString() })
+        .eq("id", conversationId);
+
+    if (error) return { error: error.message };
+
+    revalidatePath("/dashboard/ai");
+    return { error: null };
+}
+
+export async function clearConversationMessages(conversationId: string) {
+    const supabase = await createClient();
+
+    const { error } = await supabase
+        .from("ai_messages")
+        .delete()
+        .eq("conversation_id", conversationId);
+
+    if (error) return { error: error.message };
+
+    // Update conversation timestamp
+    await supabase
+        .from("ai_conversations")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", conversationId);
+
     return { error: null };
 }

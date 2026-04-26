@@ -43,13 +43,13 @@ export async function signup(formData: FormData) {
     const name = formData.get("name") as string;
     const role = formData.get("role") as string;
 
-    const { error } = await supabase.auth.signUp({
+    const { data: signUpData, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
             data: {
                 display_name: name,
-                role: "owner" // We default profile creation to owner, the cookie dictates session
+                role: role || "owner" // Fix Bug 1: Use the user-selected role
             },
         },
     });
@@ -63,6 +63,11 @@ export async function signup(formData: FormData) {
     cookieStore.set("vetya-active-role", role || "owner");
 
     revalidatePath("/", "layout");
+
+    // Fix Bug 5: If session is null, email confirmation is required
+    if (!signUpData.session) {
+        return { needsConfirmation: true };
+    }
 
     if (role === "vet") {
         redirect("/vet-dashboard");

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { createConversation, saveMessage, getConversationMessages } from "./actions";
+import { createConversation, saveMessage, getConversationMessages, deleteConversation, renameConversation, clearConversationMessages } from "./actions";
 import { useChat } from "@ai-sdk/react";
 import Link from "next/link";
 
@@ -19,6 +19,15 @@ export default function AIChatClient({
     const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
     const [conversations, setConversations] = useState(initialConversations);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+    const [renameModalVisible, setRenameModalVisible] = useState<string | null>(null);
+    const [newChatTitle, setNewChatTitle] = useState("");
+    const [confirmModal, setConfirmModal] = useState<{ id: string, type: "delete" | "clear" } | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -32,7 +41,7 @@ export default function AIChatClient({
         handleSubmit,
         append,
         isLoading,
-        error
+        error: hookError
     } = useChat({
         api: "/api/chat",
         onResponse: (response) => {
@@ -50,14 +59,20 @@ export default function AIChatClient({
         }
     });
 
+    const [localError, setLocalError] = useState<Error | null>(null);
+
+    useEffect(() => {
+        if (hookError) setLocalError(hookError);
+    }, [hookError]);
+
     console.log("AIChatClient Render - Messages:", messages.length, "Loading:", isLoading);
 
-    if (error) {
+    if (localError) {
         console.error("VERBOSE CHAT ERROR:", {
-            message: error.message,
-            name: error.name,
-            stack: error.stack,
-            cause: error.cause
+            message: localError.message,
+            name: localError.name,
+            stack: localError.stack,
+            cause: localError.cause
         });
     }
 
@@ -88,6 +103,52 @@ export default function AIChatClient({
         setMessages([]);
         setSidebarOpen(false);
         setSelectedPet(null);
+        setLocalError(null);
+    };
+
+    const handleDeleteChat = (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpenMenuId(null);
+        setConfirmModal({ id, type: "delete" });
+    };
+
+    const executeDelete = async () => {
+        if (!confirmModal || confirmModal.type !== "delete") return;
+        const id = confirmModal.id;
+        await deleteConversation(id);
+        setConversations(conversations.filter(c => c.id !== id));
+        if (activeConversationId === id) createNewChat();
+        setConfirmModal(null);
+    };
+
+    const handleClearChat = (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpenMenuId(null);
+        setConfirmModal({ id, type: "clear" });
+    };
+
+    const executeClear = async () => {
+        if (!confirmModal || confirmModal.type !== "clear") return;
+        const id = confirmModal.id;
+        await clearConversationMessages(id);
+        if (activeConversationId === id) setMessages([]);
+        setConfirmModal(null);
+    };
+
+    const handleOpenRename = (id: string, title: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpenMenuId(null);
+        setRenameModalVisible(id);
+        setNewChatTitle(title || "Chat sin título");
+    };
+
+    const executeRename = async () => {
+        if (!renameModalVisible || !newChatTitle.trim()) return;
+        await renameConversation(renameModalVisible, newChatTitle.trim());
+        setConversations(conversations.map(c => 
+            c.id === renameModalVisible ? { ...c, title: newChatTitle.trim() } : c
+        ));
+        setRenameModalVisible(null);
     };
 
     // Use append instead of handleSubmit for more control over DB sync
@@ -191,15 +252,53 @@ export default function AIChatClient({
                         <div className="px-3 py-4 text-xs text-[var(--vy-neutral-500)]">No hay chats anteriores.</div>
                     ) : (
                         conversations.map((conv) => (
-                            <button key={conv.id} onClick={() => loadConversation(conv.id, conv.pet)}
-                                className={`w-full text-left p-3 rounded-xl transition-colors ${activeConversationId === conv.id
-                                    ? "bg-[var(--vy-primary-100)] text-[var(--vy-primary-800)]"
-                                    : "hover:bg-[var(--surface)] text-[var(--vy-neutral-600)]"}`}>
-                                <div className="text-sm font-semibold truncate leading-tight mb-1">{conv.title || "Chat sin título"}</div>
-                                <div className="text-[10px] flex items-center gap-1 opacity-70">
-                                    {conv.pet ? `🐾 ${conv.pet.name}` : "Gral."} · {formatDate(conv.updated_at)}
-                                </div>
-                            </button>
+                            <div key={conv.id} className="relative group">
+                                <button onClick={() => loadConversation(conv.id, conv.pet)}
+                                    className={`w-full text-left p-3 rounded-xl transition-colors pr-10 ${activeConversationId === conv.id
+                                        ? "bg-[var(--vy-primary-100)] text-[var(--vy-primary-800)]"
+                                        : "hover:bg-[var(--surface)] text-[var(--vy-neutral-600)]"}`}>
+                                    <div className="text-sm font-semibold truncate leading-tight mb-1">{conv.title || "Chat sin título"}</div>
+                                    <div className="text-[10px] flex items-center gap-1 opacity-70">
+                                        {conv.pet ? `🐾 ${conv.pet.name}` : "Gral."} · {mounted ? formatDate(conv.updated_at) : "..."}
+                                    </div>
+                                </button>
+                                
+                                {/* Trigger 3-dots */}
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); setOpenMenuId((prev) => prev === conv.id ? null : conv.id); }}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg opacity-0 group-hover:opacity-100 focus:opacity-100 hover:bg-[var(--vy-neutral-200)] text-[var(--vy-neutral-600)] transition-all"
+                                >
+                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 12h.01M12 12h.01M18 12h.01" />
+                                    </svg>
+                                </button>
+
+                                {/* Dropdown Menu */}
+                                <AnimatePresence>
+                                    {openMenuId === conv.id && (
+                                        <>
+                                            <div className="fixed inset-0 z-40" onClick={(e) => { e.stopPropagation(); setOpenMenuId(null); }} />
+                                            <motion.div 
+                                                initial={{ opacity: 0, scale: 0.95, y: -5 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: -5 }}
+                                                className="absolute top-12 right-2 w-48 bg-[var(--surface)] border border-[var(--vy-neutral-200)] shadow-xl rounded-xl z-50 overflow-hidden text-sm font-medium"
+                                            >
+                                                <div className="p-1">
+                                                    <button onClick={(e) => handleOpenRename(conv.id, conv.title, e)} className="w-full text-left px-3 py-2.5 hover:bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-700)] rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span className="text-lg">✏️</span> Renombrar chat
+                                                    </button>
+                                                    <button onClick={(e) => handleClearChat(conv.id, e)} className="w-full text-left px-3 py-2.5 hover:bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-700)] rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span className="text-lg">🧹</span> Archivar / Limpiar
+                                                    </button>
+                                                    <div className="h-px bg-[var(--vy-neutral-200)] my-1" />
+                                                    <button onClick={(e) => handleDeleteChat(conv.id, e)} className="w-full text-left px-3 py-2.5 hover:bg-red-50 text-red-600 rounded-lg flex items-center gap-2 transition-colors">
+                                                        <span className="text-lg">🗑️</span> Eliminar chat
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        </>
+                                    )}
+                                </AnimatePresence>
+                            </div>
                         ))
                     )}
                 </div>
@@ -231,7 +330,7 @@ export default function AIChatClient({
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 bg-[var(--vy-primary-50)]/50">
+                <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 bg-transparent">
                     {messages.length === 0 ? (
                         <div className="h-full flex flex-col items-center justify-center text-center max-w-sm mx-auto opacity-70">
                             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-[var(--vy-primary-200)] to-[var(--vy-primary-400)] flex items-center justify-center text-4xl mb-6 shadow-inner text-white">🤖</div>
@@ -277,21 +376,21 @@ export default function AIChatClient({
                 </div>
 
                 {/* Error Banner */}
-                {error && (
+                {localError && (
                     <div className="absolute top-20 left-4 right-4 z-20 animate-in fade-in slide-in-from-top-4">
                         <div className="bg-red-50 border border-red-200 rounded-2xl p-4 shadow-lg flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <span className="text-xl">⚠️</span>
                                 <div>
                                     <p className="text-sm font-bold text-red-900">Error de conexión</p>
-                                    <p className="text-xs text-red-700">No pudimos conectar con la IA. Verifica tu sesión.</p>
+                                    <p className="text-xs text-red-700">Detalle: {localError.message}</p>
                                 </div>
                             </div>
                             <button
-                                onClick={() => window.location.reload()}
+                                onClick={() => setLocalError(null)}
                                 className="px-4 py-2 bg-red-600 text-white text-xs font-bold rounded-xl hover:bg-red-700 transition-colors"
                             >
-                                Reintentar
+                                Cerrar
                             </button>
                         </div>
                     </div>
@@ -330,6 +429,72 @@ export default function AIChatClient({
                     </p>
                 </div>
             </div>
+
+            {/* ── Rename Modal ── */}
+            <AnimatePresence>
+                {renameModalVisible && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+                            className="bg-[var(--surface)] rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-[var(--vy-neutral-200)]"
+                        >
+                            <h3 className="text-lg font-bold text-[var(--vy-neutral-900)] mb-4">Renombrar Chat</h3>
+                            <input 
+                                type="text"
+                                autoFocus
+                                value={newChatTitle}
+                                onChange={(e) => setNewChatTitle(e.target.value)}
+                                className="w-full px-4 py-3 rounded-xl border border-[var(--vy-neutral-300)] bg-[var(--vy-neutral-50)] text-sm mb-6 focus:ring-2 focus:ring-[var(--vy-primary-500)] outline-none"
+                                placeholder="Escribe un nuevo nombre..."
+                                onKeyDown={(e) => { if (e.key === "Enter") executeRename(); }}
+                            />
+                            <div className="flex gap-2">
+                                <button onClick={() => setRenameModalVisible(null)} className="flex-1 py-2.5 rounded-xl font-bold bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-700)] hover:bg-[var(--vy-neutral-200)] transition-colors">
+                                    Cancelar
+                                </button>
+                                <button onClick={executeRename} disabled={!newChatTitle.trim()} className="flex-1 py-2.5 rounded-xl font-bold bg-[var(--vy-primary-600)] text-white hover:bg-[var(--vy-primary-700)] disabled:opacity-50 transition-colors shadow-sm">
+                                    Guardar
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* ── Confirm Modals ── */}
+            <AnimatePresence>
+                {confirmModal && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
+                            className="bg-[var(--surface)] rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-[var(--vy-neutral-200)] flex flex-col items-center text-center"
+                        >
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-4 ${confirmModal.type === 'delete' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'}`}>
+                                {confirmModal.type === 'delete' ? '🗑️' : '🧹'}
+                            </div>
+                            <h3 className="text-xl font-bold text-[var(--vy-neutral-900)] mb-2">
+                                {confirmModal.type === 'delete' ? '¿Eliminar Chat?' : '¿Limpiar Contexto?'}
+                            </h3>
+                            <p className="text-sm text-[var(--vy-neutral-500)] mb-6">
+                                {confirmModal.type === 'delete' 
+                                    ? 'Esta acción no se puede deshacer. Todo el historial de mensajes desaparecerá.'
+                                    : 'Los mensajes se archivarán y la IA perderá el contexto de esta conversación.'}
+                            </p>
+                            <div className="flex gap-2 w-full">
+                                <button onClick={() => setConfirmModal(null)} className="flex-1 py-2.5 rounded-xl font-bold bg-[var(--vy-neutral-100)] text-[var(--vy-neutral-700)] hover:bg-[var(--vy-neutral-200)] transition-colors">
+                                    Cancelar
+                                </button>
+                                <button 
+                                    onClick={confirmModal.type === 'delete' ? executeDelete : executeClear} 
+                                    className={`flex-1 py-2.5 rounded-xl font-bold text-white transition-colors shadow-sm ${confirmModal.type === 'delete' ? 'bg-red-600 hover:bg-red-700' : 'bg-orange-600 hover:bg-orange-700'}`}
+                                >
+                                    {confirmModal.type === 'delete' ? 'Sí, eliminar' : 'Sí, limpiar'}
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

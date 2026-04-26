@@ -28,7 +28,7 @@ export default function DashboardPageShell({
     }[maxWidth];
 
     return (
-        <div className={`mx-auto p-6 md:p-8 space-y-8 ${maxWidthClass}`}>
+        <div className={`mx-auto p-4 md:p-8 space-y-6 md:space-y-8 ${maxWidthClass} overflow-x-hidden w-full`}>
             {/* Header Section */}
             {(title || subtitle || actions) && (
                 <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">

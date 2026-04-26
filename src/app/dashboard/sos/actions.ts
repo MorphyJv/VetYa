@@ -5,9 +5,9 @@ import { revalidatePath } from "next/cache";
 
 export async function createEmergencyRequest(formData: FormData) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado", data: null };
+    if (authError || !user) return { error: "No autorizado", data: null };
 
     const pet_id = formData.get("pet_id") as string;
     const description = formData.get("description") as string;
@@ -17,7 +17,7 @@ export async function createEmergencyRequest(formData: FormData) {
     const { data, error } = await supabase
         .from("emergency_requests")
         .insert({
-            owner_id: session.user.id,
+            owner_id: user.id,
             pet_id,
             description,
             severity,
@@ -34,9 +34,9 @@ export async function createEmergencyRequest(formData: FormData) {
 
 export async function getActiveEmergencies() {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado", data: null };
+    if (authError || !user) return { error: "No autorizado", data: [] };
 
     // This handles both owners (seeing their own) and vets (seeing pending/assigned) via RLS
     const { data, error } = await supabase
@@ -73,15 +73,15 @@ export async function getEmergencyById(id: string) {
 
 export async function acceptEmergency(emergencyId: string) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado" };
+    if (authError || !user) return { error: "No autorizado" };
 
     const { error } = await supabase
         .from("emergency_requests")
         .update({
             status: 'IN_PROGRESS',
-            assigned_vet_id: session.user.id
+            assigned_vet_id: user.id
         })
         .eq("id", emergencyId)
         .eq("status", "PENDING"); // Prevent accepting if already taken
@@ -95,6 +95,9 @@ export async function acceptEmergency(emergencyId: string) {
 
 export async function resolveEmergency(emergencyId: string) {
     const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) return { error: "No autorizado" };
 
     const { error } = await supabase
         .from("emergency_requests")
@@ -129,15 +132,15 @@ export async function getEmergencyMessages(emergencyId: string) {
 
 export async function sendMessage(emergencyId: string, content: string) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: "No autorizado" };
+    if (authError || !user) return { error: "No autorizado" };
 
     const { error } = await supabase
         .from("emergency_messages")
         .insert({
             emergency_id: emergencyId,
-            sender_id: session.user.id,
+            sender_id: user.id,
             content,
             message_type: 'text'
         });
@@ -185,14 +188,14 @@ export async function deriveEmergency(emergencyId: string, notes: string) {
 
 export async function toggleVetAvailability(available: boolean) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (!session?.user) return { error: 'No autorizado' };
+    if (authError || !user) return { error: 'No autorizado' };
 
     // Upsert so it works even if vet_profiles row doesn't exist yet
     const { error } = await supabase
         .from("vet_profiles")
-        .upsert({ user_id: session.user.id, available }, { onConflict: 'user_id' });
+        .upsert({ user_id: user.id, available }, { onConflict: 'user_id' });
 
     if (error) return { error: error.message };
 

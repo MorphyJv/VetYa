@@ -46,7 +46,7 @@ function QuickCallPanel({ onBack }: { onBack?: () => void }) {
                 <div className="flex overflow-x-auto md:flex-col gap-4 pb-4 -mx-4 px-4 scrollbar-hide snap-x snap-mandatory">
                     {QUICK_VETS.map((vet) => (
                         <div key={vet.number} className="snap-center shrink-0 w-[85vw] md:w-auto flex items-center gap-4 p-5 bg-[var(--vy-neutral-900)] rounded-[28px] border border-white/5 shadow-xl transition-all hover:scale-[1.02] group">
-                            <span className="text-2xl w-14 h-14 flex items-center justify-center bg-white rounded-2xl shrink-0">{vet.icon}</span>
+                            <span className="text-2xl w-14 h-14 flex items-center justify-center bg-[var(--surface)] rounded-2xl shrink-0">{vet.icon}</span>
                             <div className="flex-1 min-w-0">
                                 <p className="text-[10px] font-bold text-[var(--vy-neutral-400)] uppercase tracking-widest truncate">{vet.name}</p>
                                 <p className="text-lg font-black text-white truncate tracking-tight">{vet.number}</p>
@@ -54,7 +54,7 @@ function QuickCallPanel({ onBack }: { onBack?: () => void }) {
                             <div className="flex items-center gap-2">
                                 <a
                                     href={`tel:${vet.number.replace(/\s/g, "")}`}
-                                    className="w-12 h-12 rounded-2xl bg-white text-[var(--vy-neutral-900)] flex items-center justify-center hover:bg-red-50 transition-all active:scale-90"
+                                    className="w-12 h-12 rounded-2xl bg-[var(--surface)] text-[var(--vy-neutral-900)] flex items-center justify-center hover:bg-red-500/10 transition-all active:scale-90"
                                 >
                                     📞
                                 </a>
@@ -62,7 +62,7 @@ function QuickCallPanel({ onBack }: { onBack?: () => void }) {
                                     href={`https://wa.me/${vet.number.replace(/\+/g, "").replace(/\s/g, "")}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="w-12 h-12 rounded-2xl bg-white text-[var(--vy-neutral-900)] flex items-center justify-center hover:bg-green-50 transition-all active:scale-90"
+                                    className="w-12 h-12 rounded-2xl bg-[var(--surface)] text-[var(--vy-neutral-900)] flex items-center justify-center hover:bg-[var(--vy-success)]/10 transition-all active:scale-90"
                                 >
                                     💬
                                 </a>
@@ -300,7 +300,7 @@ export default function SOSClient({
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     placeholder="Explica brevemente qué sucede..."
-                                    className="w-full p-6 rounded-[28px] bg-[var(--vy-neutral-50)] border-2 border-transparent focus:border-red-400 focus:bg-white outline-none resize-none font-bold text-sm transition-all"
+                                    className="w-full p-6 rounded-[28px] bg-[var(--vy-neutral-50)] border-2 border-transparent focus:border-[var(--vy-danger)] focus:bg-[var(--surface)] outline-none resize-none font-bold text-sm transition-all text-[var(--vy-neutral-900)]"
                                 />
                             </div>
                             <button

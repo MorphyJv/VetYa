@@ -5,7 +5,7 @@ import { getMedicalRecords, getVaccinations } from "../recordsActions";
 import { getPetMoments } from "../momentsActions";
 import { calculateVitalityIndex } from "../vitalityActions";
 import PetTabsClient from "./PetTabsClient";
-import VitalityBar from "./VitalityBar";
+import PetInteractiveHeader from "./PetInteractiveHeader";
 
 import PetDetailHeaderActions from "./PetDetailHeaderActions";
 
@@ -38,7 +38,7 @@ export default async function PetDetailPage(props: { params: Promise<{ id: strin
     };
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto">
+        <div className="space-y-8 max-w-5xl mx-auto p-4 md:p-6 lg:p-8 pt-8 pb-24">
             {/* Header & Back Button */}
             <div className="flex items-center justify-between">
                 <Link
@@ -51,40 +51,11 @@ export default async function PetDetailPage(props: { params: Promise<{ id: strin
             </div>
 
             {/* Pet Header Card */}
-            <div className="bg-[var(--surface)] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center md:items-start border border-[var(--vy-neutral-200)] shadow-sm relative overflow-hidden">
-                <div className="absolute -top-12 -right-12 text-9xl opacity-5 pointer-events-none">
-                    {getAvatarFallback(pet.name, pet.species)}
-                </div>
-
-                <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[var(--vy-primary-100)] to-[var(--vy-primary-300)] flex items-center justify-center text-6xl shrink-0 shadow-inner overflow-hidden border-4 border-[var(--surface)]">
-                    {pet.photo_url ? (
-                        <img src={pet.photo_url} alt={pet.name} className="w-full h-full object-cover" />
-                    ) : (
-                        getAvatarFallback(pet.name, pet.species)
-                    )}
-                </div>
-
-                <div className="flex-1 text-center md:text-left z-10">
-                    <h1 className="text-3xl font-bold text-[var(--vy-neutral-900)]">{pet.name}</h1>
-                    <p className="text-lg text-[var(--vy-neutral-500)] capitalize mt-1">
-                        {pet.breed || pet.species}
-                    </p>
-
-                    {vitality && <VitalityBar vitality={vitality} />}
-
-                    <div className="mt-6 flex flex-wrap justify-center md:justify-start gap-3">
-                        <Badge label="Especie" value={
-                            pet.species === 'dog' ? 'Perro' :
-                                pet.species === 'cat' ? 'Gato' :
-                                    pet.species === 'bird' ? 'Ave' :
-                                        pet.species === 'reptile' ? 'Reptil' : 'Otro'
-                        } />
-                        <Badge label="Sexo" value={pet.sex === 'male' ? 'Macho' : pet.sex === 'female' ? 'Hembra' : 'Desconocido'} />
-                        <Badge label="Peso" value={pet.weight_kg ? `${pet.weight_kg} kg` : 'N/A'} />
-                        <Badge label="Nacimiento" value={pet.birth_date ? new Date(pet.birth_date).toLocaleDateString() : 'N/A'} />
-                    </div>
-                </div>
-            </div>
+            <PetInteractiveHeader 
+                pet={pet} 
+                initialVitality={vitality} 
+                avatarFallback={getAvatarFallback(pet.name, pet.species)} 
+            />
 
             {/* Interactive Tabs for Records, Vaccinations & Moments */}
             <PetTabsClient
@@ -97,11 +68,4 @@ export default async function PetDetailPage(props: { params: Promise<{ id: strin
     );
 }
 
-function Badge({ label, value }: { label: string; value: string }) {
-    return (
-        <div className="px-3 py-1.5 rounded-lg bg-[var(--vy-neutral-50)] border border-[var(--vy-neutral-200)] flex flex-col">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--vy-neutral-400)]">{label}</span>
-            <span className="text-sm font-semibold text-[var(--vy-neutral-700)]">{value}</span>
-        </div>
-    );
-}
+

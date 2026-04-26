@@ -152,7 +152,7 @@ export default function EmergencyRoomClient({
                                             href={`tel:${vet.number.replace(/\s/g, "")}`}
                                             className="flex items-center gap-4 p-4 bg-[var(--vy-neutral-900)] rounded-[24px] hover:opacity-90 transition-all group border-2 border-transparent hover:border-red-500/50"
                                         >
-                                            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
+                                            <div className="w-12 h-12 rounded-2xl bg-[var(--surface)] flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
                                                 {vet.icon}
                                             </div>
                                             <div className="min-w-0 flex flex-col">
